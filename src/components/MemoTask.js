@@ -21,7 +21,7 @@ const Contents = styled.Text`
   color: ${({ theme }) => theme.text};
 `;
 
-const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
+const MemoTask = ({ item, deleteTask,  updateTask }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(item.text);
 
@@ -59,11 +59,10 @@ const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
   );
 };
 
-Task.propTypes = {
+MemoTask.propTypes = {
   item: PropTypes.object.isRequired,
   deleteTask: PropTypes.func.isRequired,
-  toggleTask: PropTypes.func.isRequired,
   updateTask: PropTypes.func.isRequired,
 };
 
-export default Task;
+export default MemoTask;
