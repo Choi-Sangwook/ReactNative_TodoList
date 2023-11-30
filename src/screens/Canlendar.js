@@ -31,6 +31,7 @@ const List = styled.ScrollView`
 `;
 
 const SubTitle = styled.Text`
+margin: 20px;
     padding: 0 20px;
     color: #2B3F62;
     font-size: 20px;
@@ -93,7 +94,7 @@ export default function App() {
             <Title>Calendar</Title>
             <IconButton type={images.update}/>
         </BoxConatiner>
-        <CalendarView/>
+        <CalendarView width={width}/>
         <SubTitle>그 날의 할 일</SubTitle>
         <List width={width}>
           {Object.values(tasks)

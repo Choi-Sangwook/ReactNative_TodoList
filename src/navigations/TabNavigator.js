@@ -5,7 +5,7 @@ import {Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import mainScreen from '../screens/MainHome';
 import noteScreen from '../screens/Memo';
-import calendarScreen from '../screens/Calendar';
+import Calendar from '../screens/Canlendar';
 import { StatusBar, Dimensions } from 'react-native';
 
 const Tab = createBottomTabNavigator();
@@ -37,7 +37,7 @@ function BottomTabNavigationApp() {
         }}>
         <Tab.Screen
           name="Home"
-          component={HomeScreen}
+          component={mainScreen}
           options={{
             title: 'Home',
             tabBarIcon: ({color, size}) => (
@@ -59,7 +59,7 @@ function BottomTabNavigationApp() {
         />
         <Tab.Screen
           name="Calendar"
-          component={SearchScreen}
+          component={Calendar}
           options={{
             title: 'Calendar',
             tabBarIcon: ({color, size}) => (

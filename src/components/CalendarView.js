@@ -1,12 +1,12 @@
 import React from "react";
 import { Calendar } from "react-native-calendars";
+import styled from "styled-components/native";
 import { StyleSheet } from "react-native";
 
-function CalendarView() {
-  return (
-    <Calendar style={styles.calendar} />
-  );
-}
+
+const Container = styled.View`
+  width: ${({ width }) => (width - 60)}px;
+`;
 
 const styles = StyleSheet.create({
   calendar: {
@@ -14,5 +14,13 @@ const styles = StyleSheet.create({
     borderBottomColor: '#e0e0e0',
   }
 });
+
+const CalendarView = props =>{
+    return(
+        <Container width={props.width}>
+            <Calendar borderBottomWidth = {props.width} borderBottomColor="#000000"/>
+        </Container>
+    );
+};
 
 export default CalendarView;

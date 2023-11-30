@@ -8,7 +8,8 @@ import Input from './Input';
 const Container = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme }) => theme.itemBackground};
+  /* background-color: ${({ theme}) => theme.itemCompletedBackground}; */
+  background-color: ${({ theme,completed }) => (completed ? theme.itemCompletedBackground : theme.itemBackground)};
   border-radius: 10px;
   padding: 5px;
   margin: 3px 0px;
@@ -51,7 +52,7 @@ const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
       onBlur={_onBlur}
     />
   ) : (
-    <Container>
+    <Container completed={item.completed}>
       <IconButton
         type={item.completed ? images.completed : images.uncompleted}
         id={item.id}
@@ -59,18 +60,18 @@ const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
         completed={item.completed}
       />
       <Contents completed={item.completed}>{item.text}</Contents>
-      {item.completed || (
+      {/* {item.completed || (
         <IconButton
           type={images.update}
           onPressOut={_handleUpdateButtonPress}
         />
-      )}
-      <IconButton
+      )} */}
+      {/* <IconButton
         type={images.delete}
         id={item.id}
         onPressOut={deleteTask}
         completed={item.completed}
-      />
+      /> */}
     </Container>
   );
 };
