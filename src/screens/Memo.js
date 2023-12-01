@@ -19,7 +19,7 @@ const Title = styled.Text`
   font-weight: 600;
   width: ${({ width }) => width - 150}px;
   color: ${({ theme }) => theme.main};
-  align-self: flex-start, center;
+  align-self: center;
   margin: 20px;
 `;
 const List = styled.ScrollView`
@@ -84,7 +84,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <Container>
         <StatusBar
-          barStyle="light-content"
+          barStyle="dark-content"
           backgroundColor={theme.background} // Android only
         />
         <BoxConatiner width={width}>

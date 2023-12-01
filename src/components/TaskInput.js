@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { Dimensions, useWindowDimensions } from 'react-native';
+import { Dimensions, useWindowDimensions} from 'react-native';
 import PropTypes from 'prop-types';
 
 const StyledInput = styled.TextInput.attrs(({ theme }) => ({
@@ -12,10 +12,11 @@ const StyledInput = styled.TextInput.attrs(({ theme }) => ({
   padding: 15px 20px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  border: 2px solid #919498;
+  border: 1px solid #919498;
   background-color: #fff;
   font-size: 25px;
   color: ${({ theme }) => theme.text};
+  margin:0;
 `;
 
 const MemoInput = styled.TextInput.attrs(({ theme }) => ({
@@ -26,16 +27,14 @@ const MemoInput = styled.TextInput.attrs(({ theme }) => ({
     padding: 15px 20px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    border: 2px solid #919498;
+    border: 1px solid #919498;
     background-color: #fff;
     font-size: 25px;
+    justify-content:flex-start;
     color: ${({ theme }) => theme.text};
+    margin: 0;
   `;
   const Container = styled.View`
-  background-color: ${props => props.title === '해야할 일'?'rgba(194, 220, 255, 0.45)':'rgba(216, 255, 235, 0.45)'};
-  height: 100px;
-  width: ${({ width }) => (width - 60)/2}px;
-  border-radius: 20px;
   padding: 20px 20px;
   justify-content: flex-start
 `;
@@ -66,7 +65,7 @@ const Input = ({
     />
     <MemoInput
       width={width}
-      placeholder="할일"
+      placeholder="메모"
       maxLength={50}
       autoCapitalize="none"
       autoCorrect={false}

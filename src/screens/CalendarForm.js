@@ -109,7 +109,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <Container>
         <StatusBar
-          barStyle="light-content"
+          barStyle="dark-content"
           backgroundColor={theme.background} // Android only
         />
         <Title>일정 등록</Title>

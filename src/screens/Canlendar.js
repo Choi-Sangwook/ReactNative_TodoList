@@ -87,7 +87,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <Container>
         <StatusBar
-          barStyle="light-content"
+          barStyle="dark-content"
           backgroundColor={theme.background} // Android only
         />
         <BoxConatiner width={width}>
