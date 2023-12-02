@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar, Dimensions } from 'react-native';
 import styled, { ThemeProvider } from 'styled-components/native';
 import { theme } from '../theme';
@@ -19,7 +19,7 @@ const Title = styled.Text`
   font-weight: 600;
   width: ${({ width }) => width - 150}px;
   color: ${({ theme }) => theme.main};
-  align-self: center;
+  align-self: flex-start;
   margin: 20px;
 `;
 const List = styled.ScrollView`
@@ -48,66 +48,89 @@ const BoxConatiner = styled.SafeAreaView`
 
 
 
-export default function App() {
+export default function App({ navigation }) {
   const width = Dimensions.get('window').width;
 
   const [isReady, setIsReady] = useState(false);
  
-  const [tasks, setTasks] = useState({});
+  const [memos, setMemos] = useState({});
 
-  const _saveTasks = async tasks => {
+  const _saveMemos = async (memoData) => {
     try {
-      await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
-      setTasks(tasks);
-    } catch (e) {
-      console.error(e);
+      await AsyncStorage.setItem('memos', JSON.stringify(memoData));
+      setMemos(memoData);
+    } catch (error) {
+      console.error(error);
     }
   };
-  const _loadTasks = async () => {
-    const loadedTasks = await AsyncStorage.getItem('tasks');
-    setTasks(JSON.parse(loadedTasks || '{}'));
+
+  const _loadMemos = async () => {
+    try {
+      console.log('메모를 불러오는 중...');
+      const loadedMemos = await AsyncStorage.getItem('memos');
+      console.log('로드된 메모:', loadedMemos);
+      setMemos(JSON.parse(loadedMemos || '{}'));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const _deleteTask = id => {
-    const currentTasks = Object.assign({}, tasks);
-    delete currentTasks[id];
-    _saveTasks(currentTasks);
-  };
-  const _updateTask = item => {
-    const currentTasks = Object.assign({}, tasks);
-    currentTasks[item.id] = item;
-    _saveTasks(currentTasks);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // 화면이 포커스를 얻을 때마다 메모 목록을 다시 불러옴
+      console.log('화면이 포커스를 얻었습니다. 메모를 다시 불러옵니다.');
+      _loadMemos();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  const _deleteMemo = (id) => {
+    const currentMemos = { ...memos };
+    delete currentMemos[id];
+    _saveMemos(currentMemos);
   };
 
+  const _updateMemo = (id) => {
+    navigation.navigate('AddMemoForm', { id: id });
+  };
  
   return isReady ? (
     <ThemeProvider theme={theme}>
       <Container>
         <StatusBar
-          barStyle="dark-content"
+          barStyle="light-content"
           backgroundColor={theme.background} // Android only
         />
         <BoxConatiner width={width}>
             <Title>Note</Title>
-            <IconButton type={images.update}/>
+            <IconButton 
+              type={images.update}
+              onPressOut={() => navigation.navigate('AddMemoForm')}/>
         </BoxConatiner>
-        <List width={width}>
-          {Object.values(tasks)
-            .reverse()
-            .map(item => (
-              <MemoTask
-                key={item.id}
-                item={item}
-                deleteTask={_deleteTask}
-                updateTask={_updateTask}
-              />
-            ))}
-        </List>
+        {Object.values(memos).length === 0 ? ( 
+          <Container>
+            <SubTitle>메모를 등록해보세요!</SubTitle>
+          </Container>
+        ) : ( 
+          <List width={width}>
+            {Object.values(memos)
+              .reverse()
+              .map(item => (
+                <MemoTask
+                  key={item.id}
+                  item={item}
+                  deleteMemo={_deleteMemo}
+                  updateMemo={_updateMemo}
+                />
+              ))}
+          </List>
+        )}
       </Container>
     </ThemeProvider>
   ) : (
     <AppLoading
-      startAsync={_loadTasks}
+      startAsync={_loadMemos}
       onFinish={() => setIsReady(true)}
       onError={console.error}
     />

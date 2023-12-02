@@ -5,7 +5,7 @@ import {Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import mainScreen from '../screens/MainHome';
 import noteScreen from '../screens/Memo';
-import Calendar from '../screens/Canlendar';
+import Calendar from '../screens/Calendar';
 import { StatusBar, Dimensions } from 'react-native';
 
 const Tab = createBottomTabNavigator();

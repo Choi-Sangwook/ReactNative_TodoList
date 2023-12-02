@@ -21,39 +21,23 @@ const Contents = styled.Text`
   color: ${({ theme }) => theme.text};
 `;
 
-const MemoTask = ({ item, deleteTask,  updateTask }) => {
+const MemoTask = ({ item, deleteMemo, updateMemo }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(item.text);
 
-  const _handleUpdateButtonPress = () => {
-    setIsEditing(true);
-  };
-  const _onSubmitEditing = () => {
-    if (isEditing) {
-      const editedTask = Object.assign({}, item, { text });
-      setIsEditing(false);
-      updateTask(editedTask);
-    }
-  };
-  const _onBlur = () => {
-    if (isEditing) {
-      setIsEditing(false);
-      setText(item.text);
-    }
-  };
-
+  
   return (
-    <Container completed={item.completed}>
-      <Contents>{item.text}</Contents>
+    <Container>
+      <Contents>{item.title}</Contents>
         <IconButton
           type={images.update}
-          onPressOut={_handleUpdateButtonPress}
-        />
-      
+          id={item.id}
+          onPressOut={updateMemo}
+        />      
       <IconButton
         type={images.delete}
         id={item.id}
-        onPressOut={deleteTask}
+        onPressOut={deleteMemo}
       />
     </Container>
   );
@@ -61,8 +45,8 @@ const MemoTask = ({ item, deleteTask,  updateTask }) => {
 
 MemoTask.propTypes = {
   item: PropTypes.object.isRequired,
-  deleteTask: PropTypes.func.isRequired,
-  updateTask: PropTypes.func.isRequired,
+  deleteMemo: PropTypes.func.isRequired,
+  updateMemo: PropTypes.func.isRequired,
 };
 
 export default MemoTask;
