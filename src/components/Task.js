@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import IconButton from './IconButton';
 import { images } from '../images';
 import Input from './Input';
+import ToggleButton from './ToggleButton';
 
 const Container = styled.View`
   flex-direction: row;
@@ -44,6 +45,11 @@ const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
     }
   };
 
+  const _handleTogglePress = () => {
+    // Implement your toggle logic here
+    toggleTask(item.id);
+  };
+
   return isEditing ? (
     <Input
       value={text}
@@ -53,12 +59,13 @@ const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
     />
   ) : (
     <Container completed={item.completed}>
-      <IconButton
+      <ToggleButton onPress={_handleTogglePress} completed={item.completed} />
+      {/* <IconButton
         type={item.completed ? images.completed : images.uncompleted}
         id={item.id}
         onPressOut={toggleTask}
         completed={item.completed}
-      />
+      /> */}
       <Contents completed={item.completed}>{item.text}</Contents>
       {/* {item.completed || (
         <IconButton

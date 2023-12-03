@@ -15,10 +15,13 @@ const styles = StyleSheet.create({
   }
 });
 
-const CalendarView = props =>{
+const CalendarView = (props) =>{
     return(
         <Container width={props.width}>
-            <Calendar borderBottomWidth = {props.width} borderBottomColor="#000000"/>
+            <Calendar 
+            borderBottomWidth = {props.width} 
+            borderBottomColor="#000000"
+            onDayPress={(day) => props.onDateSelect(day.dateString)}/>
         </Container>
     );
 };

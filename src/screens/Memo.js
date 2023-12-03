@@ -7,6 +7,7 @@ import IconButton from '../components/IconButton';
 import {images} from '../images';
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TextInput } from 'react-native'; // 추가된 부분
 
 const Container = styled.SafeAreaView`
   flex: 1;
@@ -20,6 +21,7 @@ const Title = styled.Text`
   width: ${({ width }) => width - 150}px;
   color: ${({ theme }) => theme.main};
   align-self: flex-start;
+  align-self: center;
   margin: 20px;
 `;
 const List = styled.ScrollView`
@@ -29,9 +31,10 @@ const List = styled.ScrollView`
 `;
 
 const SubTitle = styled.Text`
+margin: 20px;
     padding: 0 20px;
     color: #2B3F62;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 700;
     align-self: flex-start;
 `;
@@ -54,6 +57,7 @@ export default function App({ navigation }) {
   const [isReady, setIsReady] = useState(false);
  
   const [memos, setMemos] = useState({});
+  const [searchKeyword, setSearchKeyword] = useState(''); //테스트
 
   const _saveMemos = async (memoData) => {
     try {
@@ -94,6 +98,11 @@ export default function App({ navigation }) {
   const _updateMemo = (id) => {
     navigation.navigate('AddMemoForm', { id: id });
   };
+
+  const filteredMemos = Object.values(memos).filter( //ㅈ테스트
+    (memo) =>
+      memo.contents.includes(searchKeyword) || memo.title.includes(searchKeyword)
+  );
  
   return isReady ? (
     <ThemeProvider theme={theme}>
@@ -108,13 +117,27 @@ export default function App({ navigation }) {
               type={images.update}
               onPressOut={() => navigation.navigate('AddMemoForm')}/>
         </BoxConatiner>
+        <TextInput
+          placeholder="메모를 검색하세요"
+          value={searchKeyword}
+          onChangeText={(text) => setSearchKeyword(text)}
+          style={{
+            width: width - 40,
+            borderColor: 'gray',
+            borderWidth: 1,
+            borderRadius: 5,
+            padding: 8,
+            marginTop: 10,
+            marginBottom: 10,
+          }}
+        />
         {Object.values(memos).length === 0 ? ( 
           <Container>
             <SubTitle>메모를 등록해보세요!</SubTitle>
           </Container>
         ) : ( 
           <List width={width}>
-            {Object.values(memos)
+            {Object.values(filteredMemos)
               .reverse()
               .map(item => (
                 <MemoTask

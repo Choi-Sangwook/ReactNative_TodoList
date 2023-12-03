@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar, Dimensions } from 'react-native';
 import styled, { ThemeProvider } from 'styled-components/native';
 import { theme } from '../theme';
-import MemoTask from '../components/MemoTask';
+import Task from '../components/Task';
 import IconButton from '../components/IconButton';
 import CalendarView from '../components/CalendarView';
 import {images} from '../images';
+import { Calendar } from "react-native-calendars";
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -51,12 +52,19 @@ const BoxConatiner = styled.SafeAreaView`
 
 
 
-export default function App() {
+export default function App({ navigation }) {
   const width = Dimensions.get('window').width;
+  // 오늘 날짜 정보
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더하고, 1자리 수 월은 0을 붙여줍니다.
+  const day = String(today.getDate()).padStart(2, '0'); // 날짜도 1자리 수일 경우 0을 붙여줍니다.
+  const formattedToday = `${year}-${month}-${day}`;
 
-  const [isReady, setIsReady] = useState(false);
- 
+  const [isReady, setIsReady] = useState(false); 
   const [tasks, setTasks] = useState({});
+  const [selectedDate, setSelectedDate] = useState(formattedToday);
+  const [markedDates, setMarkedDates] = useState({"2023-12-13": {"marked": true, dots: [],"selected": true}});
 
   const _saveTasks = async tasks => {
     try {
@@ -81,7 +89,20 @@ export default function App() {
     currentTasks[item.id] = item;
     _saveTasks(currentTasks);
   };
+  const handleDateSelect = (date) => {
+    const dateString = date.dateString;
+    const newMarkedDates = {};
+    newMarkedDates[dateString] = { selected: false, dots:[], marked: false };
+    setMarkedDates(newMarkedDates); //마킹된 날짜 저장.
+    console.log(markedDates);
+    setSelectedDate(dateString); //선택한 날짜 정보 상태 저자
+    console.log(date);
+    // 여기서 선택한 날짜에 대한 처리를 추가할 수 있습니다.
+  };
 
+  useEffect(() => {
+    setSelectedDate(formattedToday);
+  }, [selectedDate]);
  
   return isReady ? (
     <ThemeProvider theme={theme}>
@@ -92,15 +113,27 @@ export default function App() {
         />
         <BoxConatiner width={width}>
             <Title>Calendar</Title>
-            <IconButton type={images.update}/>
+            <IconButton 
+              type={images.update}
+              onPressOut={() => navigation.navigate('AddTaskForm')}/>
         </BoxConatiner>
-        <CalendarView width={width}/>
+        <Container>
+            <Calendar 
+            theme={{
+              todayTextColor: 'black',
+            }}
+            borderBottomWidth = {width} 
+            borderBottomColor="#000000"
+            onDayPress={(day) => handleDateSelect(day)}
+            markedDates={markedDates}
+            monthFormat={'M월'}/>
+        </Container>
         <SubTitle>그 날의 할 일</SubTitle>
         <List width={width}>
           {Object.values(tasks)
             .reverse()
             .map(item => (
-              <MemoTask
+              <Task
                 key={item.id}
                 item={item}
                 deleteTask={_deleteTask}
