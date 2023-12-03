@@ -9,6 +9,8 @@ import {images} from '../images';
 import { Calendar } from "react-native-calendars";
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CalendarTask from '../components/CalendarTask';
+
 
 const Container = styled.SafeAreaView`
   flex: 1;
@@ -133,7 +135,7 @@ export default function App({ navigation }) {
           {Object.values(tasks)
             .reverse()
             .map(item => (
-              <Task
+              <CalendarTask
                 key={item.id}
                 item={item}
                 deleteTask={_deleteTask}

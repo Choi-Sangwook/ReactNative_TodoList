@@ -45,8 +45,11 @@ const MemoInput = styled.TextInput.attrs(({ theme }) => ({
 
 const Input = ({
   value,
+  memo,
   onChangeText,
+  onChangeTextMemo,
   onSubmitEditing,
+  onBlurMemo,
   onBlur,
 }) => {
   const width = Dimensions.get('window').width;
@@ -64,8 +67,6 @@ const Input = ({
       keyboardAppearance="dark" // iOS only
       value={value}
       onChangeText={onChangeText}
-      onSubmitEditing={onSubmitEditing}
-      onBlur={onBlur}
     />
     <MemoInput
       width={width}
@@ -75,10 +76,8 @@ const Input = ({
       autoCorrect={false}
       returnKeyType="done"
       keyboardAppearance="dark" // iOS only
-      value={value}
-      onChangeText={onChangeText}
-      onSubmitEditing={onSubmitEditing}
-      onBlur={onBlur}
+      value={memo}
+      onChangeText={onChangeTextMemo}
     />
     </Container>
   );
@@ -87,6 +86,7 @@ const Input = ({
 Input.propTypes = {
   placeholder: PropTypes.string,
   value: PropTypes.string.isRequired,
+  memo: PropTypes.string.isRequired,
   onChangeText: PropTypes.func.isRequired,
   onSubmitEditing: PropTypes.func.isRequired,
   onBlur: PropTypes.func.isRequired,

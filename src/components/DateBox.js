@@ -27,7 +27,7 @@ const Box = props =>{
     return (
         <Container width={props.width}>
             <Contents>{props.date}</Contents>
-            <DatePicker/>
+            <DatePicker title="날짜"/>
         </Container>
     )
 };
