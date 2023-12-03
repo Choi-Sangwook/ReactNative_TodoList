@@ -57,12 +57,14 @@ export default function App() {
 
   const [isReady, setIsReady] = useState(false);
   const [newTask, setNewTask] = useState('');
+  const [newMemo, setNewMemo] = useState('');
   const [tasks, setTasks] = useState({});
 
   const _saveTasks = async tasks => {
     try {
       await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
       setTasks(tasks);
+      console.log(tasks);
     } catch (e) {
       console.error(e);
     }
@@ -73,11 +75,16 @@ export default function App() {
   };
 
   const _addTask = () => {
+    if (!newTask.trim() && !newMemo.trim()) {
+      // 입력된 텍스트나 메모가 없는 경우 처리 (예: 경고 메시지 또는 아무 작업도 하지 않음)
+      return;
+    }
     const ID = Date.now().toString();
     const newTaskObject = {
-      [ID]: { id: ID, text: newTask, completed: false },
+      [ID]: { id: ID, text: newTask, completed: false, date: ID, memo: newMemo, },
     };
     setNewTask('');
+    setNewMemo('');
     _saveTasks({ ...tasks, ...newTaskObject });
   };
   const _deleteTask = id => {
@@ -96,12 +103,21 @@ export default function App() {
     _saveTasks(currentTasks);
   };
 
-  const _handleTextChange = text => {
+  const _handleTextChange = text=> {
     setNewTask(text);
   };
   const _onBlur = () => {
     setNewTask('');
   };
+
+  const _handleTextChangeMemo = memo=> {
+    setNewMemo(memo);
+  };
+  const _onBlurMemo = () => {
+    setNewMemo('');
+  };
+
+  
 
   const tasksValue = Object.values(tasks);
   const length = tasksValue.length;
@@ -116,14 +132,16 @@ export default function App() {
         />
         <Title>일정 등록</Title>
         <DateBox date="2020-01-10" width={width}/>
-        <DatePicker/>
         <TaskInput
           value={newTask}
+          memo={newMemo}
           onChangeText={_handleTextChange}
+          onChangeTextMemo={_handleTextChangeMemo}
           onSubmitEditing={_addTask}
           onBlur={_onBlur}
+          onBlurMemo={_onBlurMemo}
         />
-        <CustonButton width={width}/>
+        <CustonButton width={width} title="등록" onPress={_addTask}/>
       </Container>
     </ThemeProvider>
   ) : (

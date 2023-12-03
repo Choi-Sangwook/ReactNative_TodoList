@@ -1,32 +1,64 @@
-import React, {useState} from 'react'
-import { View, Button } from 'react-native'
+import React, {useState}  from 'react';
+import { TouchableOpacity, Text } from 'react-native';
+import styled from 'styled-components/native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import PropTypes from 'prop-types';
+const Contents = styled.Text`
+    color: #fff;
+    text-align: center;
+    font-size:15px;
+    font-weight: 700;
+`;
 
-export default function Home() {
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+const Container = styled.View`
+    background: #3E92FF;
+    height: 45px;
+    border: 1px solid #9EC8FF;
+    border-radius: 20px;
+    padding: 10px 15px;
+    margin:0;
+`;
 
-    const showDatePicker = () => {
-        setDatePickerVisibility(true);
-    };
+const CustonButton = props => {
+const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-    const hideDatePicker = () => {
-        setDatePickerVisibility(false);
-    };
+const showDatePicker = () => {
+    setDatePickerVisibility(true);
+};
 
-    const handleConfirm = (date) => {
-        console.warn("A date has been picked: ", date);
-        hideDatePicker();
-    };
+const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+};
 
-    return (
-        <View>
-            <Button title="날짜" onPress={showDatePicker}/>
+const handleConfirm = (date) => {
+    console.warn("A date has been picked: ", date);
+    hideDatePicker();
+};
+
+  return (
+    <TouchableOpacity onPressOut={showDatePicker}>
+        <Container>
+            <Contents>{props.title}</Contents>
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"
                 onConfirm={handleConfirm}
                 onCancel={hideDatePicker}
             />
-        </View>
+        </Container>
+    </TouchableOpacity>
   );
-}
+};
+
+CustonButton.defaultProps = {
+  onPressOut: () => {},
+};
+
+// CustonButton.propTypes = {
+//   type: PropTypes.oneOf(Object.values(images)).isRequired,
+//   onPressOut: PropTypes.func,
+//   id: PropTypes.string,
+//   completed: PropTypes.bool,
+// };
+
+export default CustonButton;
