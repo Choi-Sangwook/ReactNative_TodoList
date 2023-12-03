@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import {Dimensions, View, Text } from 'react-native';
 import styled from 'styled-components/native';
+import DatePicker from './DatePicker'
 
 
 const Container = styled.View`
@@ -9,6 +10,9 @@ const Container = styled.View`
     width: ${({ width }) => (width - 40)}px;
     border-radius: 20px;
     padding: 20px 20px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 `;
 
 const Contents = styled.Text`
@@ -23,6 +27,7 @@ const Box = props =>{
     return (
         <Container width={props.width}>
             <Contents>{props.date}</Contents>
+            <DatePicker/>
         </Container>
     )
 };

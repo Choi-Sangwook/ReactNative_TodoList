@@ -7,6 +7,8 @@ import Task from '../components/Task';
 import Box from '../components/Box';
 import DateBox from '../components/DateBox'
 import TaskInput from '../components/TaskInput'
+import CustonButton from '../components/CustomButton';
+import DatePicker from '../components/DatePicker'
 import PrograssBar from '../components/ProgressBar';
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -114,12 +116,14 @@ export default function App() {
         />
         <Title>일정 등록</Title>
         <DateBox date="2020-01-10" width={width}/>
+        <DatePicker/>
         <TaskInput
           value={newTask}
           onChangeText={_handleTextChange}
           onSubmitEditing={_addTask}
           onBlur={_onBlur}
         />
+        <CustonButton width={width}/>
       </Container>
     </ThemeProvider>
   ) : (
