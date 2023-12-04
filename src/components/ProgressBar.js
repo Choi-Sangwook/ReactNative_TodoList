@@ -23,11 +23,15 @@ const BarText = styled.Text`
  
 const ProgressBar = props => {
 
+  const completedValue = props.completed || 0;
+  const lengthValue = props.length || 0;
+  const progressValue = (completedValue && lengthValue) ? completedValue / lengthValue : 0;
+
   return (
     <BarView>
       <Bar>
         <Progress.Bar
-          progress={props.completed / props.length}
+          progress={progressValue}
           width={null}
           height={8}
           color={"#17D313"}
@@ -36,7 +40,7 @@ const ProgressBar = props => {
         />
       </Bar>
       <BarText>
-        {props.completed}/{props.length}
+        {completedValue}/{lengthValue}
       </BarText>
     </BarView>
   );

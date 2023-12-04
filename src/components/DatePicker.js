@@ -19,7 +19,7 @@ const Container = styled.View`
     margin:0;
 `;
 
-const CustonButton = props => {
+const CustonButton = ({title, onDateChange}) => {
 const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
 const showDatePicker = () => {
@@ -32,13 +32,15 @@ const hideDatePicker = () => {
 
 const handleConfirm = (date) => {
     console.warn("A date has been picked: ", date);
+    const formattedDate = date.toISOString().split('T')[0];
+    onDateChange(formattedDate);
     hideDatePicker();
 };
 
   return (
     <TouchableOpacity onPressOut={showDatePicker}>
         <Container>
-            <Contents>{props.title}</Contents>
+            <Contents>{title}</Contents>
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"

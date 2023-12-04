@@ -64,10 +64,10 @@ export default function App({ navigation }) {
   const formattedToday = `${year}-${month}-${day}`;
 
   const [isReady, setIsReady] = useState(false); 
+  const [loadTasks, setLoadTasks] =useState({});
   const [tasks, setTasks] = useState({});
   const [selectedDate, setSelectedDate] = useState(formattedToday);
-  const [markedDates, setMarkedDates] = useState({"2023-12-13": {"marked": true, dots: [],"selected": true}});
-
+  const [markedDates, setMarkedDates] = useState({});
   const _saveTasks = async tasks => {
     try {
       await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
@@ -76,9 +76,33 @@ export default function App({ navigation }) {
       console.error(e);
     }
   };
+
   const _loadTasks = async () => {
     const loadedTasks = await AsyncStorage.getItem('tasks');
-    setTasks(JSON.parse(loadedTasks || '{}'));
+    const loadedTasksObject = JSON.parse(loadedTasks || '{}'); 
+    setLoadTasks(loadedTasksObject); //화면 진입시 일과들 모두 로딩해서 상태 변수로 저장.
+    _selectedDateTasks();
+    const markedDatesObject = {};
+    Object.keys(loadedTasksObject).forEach((taskId) => {
+    const task = loadedTasksObject[taskId];
+    markedDatesObject[task.date] = {
+      selected: markedDatesObject[task.date]?.selected || false,
+      dots: [{ color: 'green' }], // 마커 색깔 등 설정 가능
+      marked: true,
+    };
+  });
+  setMarkedDates(markedDatesObject);
+  };
+
+  const _selectedDateTasks = () => {
+    const selectedDateTasks = Object.keys(loadTasks)
+    .filter(key => loadTasks[key].date === selectedDate)
+    .reduce((obj, key) => {
+      obj[key] = loadTasks[key];
+      return obj;
+    }, {});
+  // 일정 및 마커 갱신
+  setTasks(selectedDateTasks);
   };
 
   const _deleteTask = id => {
@@ -91,20 +115,41 @@ export default function App({ navigation }) {
     currentTasks[item.id] = item;
     _saveTasks(currentTasks);
   };
+
   const handleDateSelect = (date) => {
     const dateString = date.dateString;
-    const newMarkedDates = {};
-    newMarkedDates[dateString] = { selected: false, dots:[], marked: false };
-    setMarkedDates(newMarkedDates); //마킹된 날짜 저장.
-    console.log(markedDates);
-    setSelectedDate(dateString); //선택한 날짜 정보 상태 저자
-    console.log(date);
-    // 여기서 선택한 날짜에 대한 처리를 추가할 수 있습니다.
+    setSelectedDate(dateString); 
+    console.log(dateString);
+    const updatedMarkedDates = { ...markedDates };
+
+    if (updatedMarkedDates[selectedDate]) {
+      updatedMarkedDates[selectedDate] = {
+        ...updatedMarkedDates[selectedDate],
+        selected: false,
+      };
+    }
+    // 선택된 날짜에 selected 표시
+    updatedMarkedDates[dateString] = {
+    selected: true,
+    };
+    setMarkedDates(updatedMarkedDates);
+       // 여기서 선택한 날짜에 대한 처리를 추가할 수 있습니다.
+    _selectedDateTasks();
+    
   };
 
   useEffect(() => {
-    setSelectedDate(formattedToday);
-  }, [selectedDate]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      // 화면이 포커스를 얻을 때마다 메모 목록을 다시 불러옴
+      console.log('화면이 포커스를 얻었습니다. 메모를 다시 불러옵니다.');
+      setSelectedDate(formattedToday);
+      _loadTasks();   
+      console.log(tasks);
+      console.log('선택된 날짜', selectedDate, formattedToday);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
  
   return isReady ? (
     <ThemeProvider theme={theme}>
@@ -117,19 +162,21 @@ export default function App({ navigation }) {
             <Title>Calendar</Title>
             <IconButton 
               type={images.update}
-              onPressOut={() => navigation.navigate('AddTaskForm')}/>
-        </BoxConatiner>
-        <Container>
+              onPressOut={() => navigation.navigate('AddTaskForm', { selectedDate })}/>
+        </BoxConatiner>        
             <Calendar 
             theme={{
               todayTextColor: 'black',
             }}
+            style={{
+              height: 300, // 원하는 높이로 설정
+            }}
+            showSixWeeks={false}
             borderBottomWidth = {width} 
             borderBottomColor="#000000"
             onDayPress={(day) => handleDateSelect(day)}
             markedDates={markedDates}
-            monthFormat={'M월'}/>
-        </Container>
+            monthFormat={'M월'}/>        
         <SubTitle>그 날의 할 일</SubTitle>
         <List width={width}>
           {Object.values(tasks)

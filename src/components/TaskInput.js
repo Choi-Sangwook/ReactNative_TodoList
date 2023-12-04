@@ -48,9 +48,6 @@ const Input = ({
   memo,
   onChangeText,
   onChangeTextMemo,
-  onSubmitEditing,
-  onBlurMemo,
-  onBlur,
 }) => {
   const width = Dimensions.get('window').width;
   // const width = useWindowDimensions().width;
@@ -89,7 +86,6 @@ Input.propTypes = {
   memo: PropTypes.string.isRequired,
   onChangeText: PropTypes.func.isRequired,
   onSubmitEditing: PropTypes.func.isRequired,
-  onBlur: PropTypes.func.isRequired,
 };
 
 export default Input;

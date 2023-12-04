@@ -73,7 +73,7 @@ const App = () => {
           }}
         />
         <Tab.Screen
-          name="Calendar"
+          name="Task"
           component={CalendarStackScreen}
           options={{
             title: 'Calendar',

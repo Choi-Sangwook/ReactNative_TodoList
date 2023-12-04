@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar, Dimensions } from 'react-native';
 import styled, { ThemeProvider } from 'styled-components/native';
 import { theme } from '../theme';
@@ -48,12 +48,15 @@ const BoxConatiner = styled.SafeAreaView`
 
 
 
-export default function App() {
+
+
+export default function App({navigation}) {
   const width = Dimensions.get('window').width;
 
   const [isReady, setIsReady] = useState(false);
   const [newTask, setNewTask] = useState('');
   const [tasks, setTasks] = useState({});
+  const [toDayTasks, setTodayTasks] = useState({});
 
   const _saveTasks = async tasks => {
     try {
@@ -68,40 +71,44 @@ export default function App() {
     setTasks(JSON.parse(loadedTasks || '{}'));
   };
 
-  const _addTask = () => {
-    const ID = Date.now().toString();
-    const newTaskObject = {
-      [ID]: { id: ID, text: newTask, completed: false },
-    };
-    setNewTask('');
-    _saveTasks({ ...tasks, ...newTaskObject });
-  };
-  const _deleteTask = id => {
-    const currentTasks = Object.assign({}, tasks);
-    delete currentTasks[id];
-    _saveTasks(currentTasks);
-  };
   const _toggleTask = id => {
     const currentTasks = Object.assign({}, tasks);
     currentTasks[id]['completed'] = !currentTasks[id]['completed'];
     _saveTasks(currentTasks);
   };
+
   const _updateTask = item => {
     const currentTasks = Object.assign({}, tasks);
     currentTasks[item.id] = item;
     _saveTasks(currentTasks);
   };
 
-  const _handleTextChange = text => {
-    setNewTask(text);
-  };
-  const _onBlur = () => {
-    setNewTask('');
-  };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // 화면이 포커스를 얻을 때마다 메모 목록을 다시 불러옴
+      console.log('화면이 포커스를 얻었습니다. 메모를 다시 불러옵니다.');
+      _loadTasks();
+    });
+    return () => {
+      // cleanup 함수를 반환하여 해당 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
+      unsubscribe();
+    };
+  }, []);    
 
-  const tasksValue = Object.values(tasks);
-  const length = tasksValue.length;
-  const completed = tasksValue.filter((task) => task.completed === true).length;
+  useEffect(() => {
+    const today = new Date();
+    const formattedToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  
+    const todayTaskList = Object.values(tasks).filter((task) => task.date === formattedToday);
+    setTodayTasks(todayTaskList.reduce((acc, task) => {
+      acc[task.id] = task;
+      return acc;
+    }, {}));
+  }, [tasks]);
+
+  const tasksValue = Object.values(toDayTasks);
+  const length = tasksValue.length || 0;
+  const completed = tasksValue.filter((task) => task.completed === true).length || 0;
 
   return isReady ? (
     <ThemeProvider theme={theme}>
@@ -120,19 +127,24 @@ export default function App() {
         <SubTitle>전체 진행도</SubTitle>
         <PrograssBar completed={completed} length={length}/>
         <SubTitle>목록</SubTitle>
+        {Object.values(toDayTasks).length === 0 ? ( 
+          <Container>
+            <SubTitle>오늘의 일과를 추가하세요.</SubTitle>
+          </Container>
+        ) : (
         <List width={width}>
-          {Object.values(tasks)
+          {Object.values(toDayTasks)
             .reverse()
             .map(item => (
               <Task
                 key={item.id}
                 item={item}
-                deleteTask={_deleteTask}
                 toggleTask={_toggleTask}
                 updateTask={_updateTask}
               />
             ))}
         </List>
+        )}
       </Container>
     </ThemeProvider>
   ) : (

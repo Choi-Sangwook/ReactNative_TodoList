@@ -23,11 +23,14 @@ const Contents = styled.Text`
     justify-content:flex-end;
 `;
 
-const Box = props =>{
+const Box = ({date, width, onDateChange}) =>{
+    
+    console.log('선택된 날짜' , date);
+
     return (
-        <Container width={props.width}>
-            <Contents>{props.date}</Contents>
-            <DatePicker title="날짜"/>
+        <Container width={width}>
+            <Contents>{date}</Contents>
+            <DatePicker title="날짜" date = {date} onDateChange={onDateChange}/>
         </Container>
     )
 };

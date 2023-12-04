@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StatusBar, Dimensions } from 'react-native';
+import { StatusBar, Dimensions, View } from 'react-native';
 import styled, { ThemeProvider } from 'styled-components/native';
 import { theme } from '../theme';
 import Input from '../components/Input';
@@ -49,21 +49,41 @@ const BoxConatiner = styled.SafeAreaView`
   align-items: center;
 `;
 
+const BackButton = styled.TouchableOpacity`
+  background-color: #416AD7;
+  padding: 10px;
+  border-radius: 10px;
+`;
+
+const BackButtonText = styled.Text`
+  font-size: 18px;
+  color: white;
+`;
+
+const ViewStyle = styled(View)`
+  flex-direction: row;
+  justify-content: space-between;
+`;
 
 
 
-export default function App() {
+
+
+export default function App({navigation, route}) {
   const width = Dimensions.get('window').width;
 
   const [isReady, setIsReady] = useState(false);
   const [newTask, setNewTask] = useState('');
   const [newMemo, setNewMemo] = useState('');
   const [tasks, setTasks] = useState({});
+  const [selectedDate, setSelectedDate] = useState(route.params.selectedDate);
+  
 
   const _saveTasks = async tasks => {
     try {
       await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
       setTasks(tasks);
+      navigation.navigate('Calendar');
       console.log(tasks);
     } catch (e) {
       console.error(e);
@@ -81,7 +101,7 @@ export default function App() {
     }
     const ID = Date.now().toString();
     const newTaskObject = {
-      [ID]: { id: ID, text: newTask, completed: false, date: ID, memo: newMemo, },
+      [ID]: { id: ID, text: newTask, completed: false, date: selectedDate, memo: newMemo, },
     };
     setNewTask('');
     setNewMemo('');
@@ -102,21 +122,18 @@ export default function App() {
     currentTasks[item.id] = item;
     _saveTasks(currentTasks);
   };
-
   const _handleTextChange = text=> {
     setNewTask(text);
   };
-  const _onBlur = () => {
-    setNewTask('');
-  };
-
   const _handleTextChangeMemo = memo=> {
     setNewMemo(memo);
   };
-  const _onBlurMemo = () => {
-    setNewMemo('');
-  };
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date)
+    console.log(date);
+  };
+  console.log('넘겨받은 선택된 날짜', selectedDate);
   
 
   const tasksValue = Object.values(tasks);
@@ -130,16 +147,19 @@ export default function App() {
           barStyle="dark-content"
           backgroundColor={theme.background} // Android only
         />
-        <Title>일정 등록</Title>
-        <DateBox date="2020-01-10" width={width}/>
+        <ViewStyle>
+          <Title>일정 등록</Title>
+          <BackButton onPress={() => navigation.goBack()}>
+            <BackButtonText>뒤로가기</BackButtonText>
+          </BackButton>
+        </ViewStyle>
+        <DateBox date={selectedDate} width={width}  onDateChange={handleDateChange}/>
         <TaskInput
           value={newTask}
           memo={newMemo}
           onChangeText={_handleTextChange}
           onChangeTextMemo={_handleTextChangeMemo}
           onSubmitEditing={_addTask}
-          onBlur={_onBlur}
-          onBlurMemo={_onBlurMemo}
         />
         <CustonButton width={width} title="등록" onPress={_addTask}/>
       </Container>
