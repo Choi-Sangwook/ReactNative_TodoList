@@ -81,8 +81,14 @@ export default function App({ navigation }) {
     const loadedTasks = await AsyncStorage.getItem('tasks');
     const loadedTasksObject = JSON.parse(loadedTasks || '{}'); 
     setLoadTasks(loadedTasksObject); //화면 진입시 일과들 모두 로딩해서 상태 변수로 저장.
-    _selectedDateTasks();
-    const markedDatesObject = {};
+    const markedDatesObject = {
+      ...loadedTasksObject,
+      [formattedToday]: {
+        selected: true,
+        marked: false,
+        dots: [{ color: 'green' }], // 마커 색깔 등 설정 가능
+      },
+    };
     Object.keys(loadedTasksObject).forEach((taskId) => {
     const task = loadedTasksObject[taskId];
     markedDatesObject[task.date] = {
@@ -91,7 +97,9 @@ export default function App({ navigation }) {
       marked: true,
     };
   });
+  console.log('loadTasksStatus', markedDatesObject);
   setMarkedDates(markedDatesObject);
+  _selectedDateTasks();
   };
 
   const _selectedDateTasks = () => {
@@ -102,6 +110,7 @@ export default function App({ navigation }) {
       return obj;
     }, {});
   // 일정 및 마커 갱신
+  console.log('dsd', selectedDateTasks);
   setTasks(selectedDateTasks);
   };
 
@@ -121,7 +130,6 @@ export default function App({ navigation }) {
     setSelectedDate(dateString); 
     console.log(dateString);
     const updatedMarkedDates = { ...markedDates };
-
     if (updatedMarkedDates[selectedDate]) {
       updatedMarkedDates[selectedDate] = {
         ...updatedMarkedDates[selectedDate],
@@ -131,25 +139,34 @@ export default function App({ navigation }) {
     // 선택된 날짜에 selected 표시
     updatedMarkedDates[dateString] = {
     selected: true,
+    marked: updatedMarkedDates[dateString]?.marked || false,
+    dots: updatedMarkedDates[dateString]?.dots || [],
     };
+    console.log(updatedMarkedDates[dateString]);
     setMarkedDates(updatedMarkedDates);
        // 여기서 선택한 날짜에 대한 처리를 추가할 수 있습니다.
-    _selectedDateTasks();
-    
+    _selectedDateTasks();    
   };
 
+
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener('focus', async () => {
       // 화면이 포커스를 얻을 때마다 메모 목록을 다시 불러옴
       console.log('화면이 포커스를 얻었습니다. 메모를 다시 불러옵니다.');
       setSelectedDate(formattedToday);
-      _loadTasks();   
+      await _loadTasks();   
       console.log(tasks);
       console.log('선택된 날짜', selectedDate, formattedToday);
+      console.log(markedDates);
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, formattedToday]);
+  
+  useEffect(() => {
+    // useEffect 내부에서 _selectedDateTasks를 호출하여 동기화 처리
+    _selectedDateTasks();
+  }, [selectedDate]);
  
   return isReady ? (
     <ThemeProvider theme={theme}>
