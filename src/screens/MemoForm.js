@@ -20,12 +20,12 @@ const Title = styled.Text`
   font-weight: 600;
   color: ${({ theme }) => theme.main};
   align-self: flex-start;
-  margin: 20px;
+  margin: 20px 0;
 `;
 
 const Input = styled.TextInput`
   width: ${Dimensions.get('window').width * 0.9}px;
-  height: ${Dimensions.get('window').height * 0.7}px;
+  flex:1;
   border: 1px solid ${(props) => props.theme.border};
   padding: 8px;
   margin-bottom: 16px; 
@@ -36,8 +36,9 @@ const Input = styled.TextInput`
 `;
 
 const Button = styled.TouchableOpacity`
+  width: ${Dimensions.get('window').width * 0.9}px;
   background-color: #416AD7;
-  margin-top: 10px;
+  margin: 20px 0;
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 20px;
@@ -49,6 +50,7 @@ const ButtonText = styled.Text`
   color: white;
   font-size: 20px;
   font-weight: bold;
+  align-self:center;
 `;
 
 const BackButton = styled.TouchableOpacity`
