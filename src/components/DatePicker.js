@@ -11,10 +11,11 @@ const Contents = styled.Text`
 `;
 
 const Container = styled.View`
+    width: 90px;
     background: #3E92FF;
     height: 45px;
     border: 1px solid #9EC8FF;
-    border-radius: 20px;
+    border-radius: 15px;
     padding: 10px 15px;
     margin:0;
 `;

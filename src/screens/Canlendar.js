@@ -34,7 +34,7 @@ const List = styled.ScrollView`
 `;
 
 const SubTitle = styled.Text`
-margin: 20px;
+    margin: 20px;
     padding: 0 20px;
     color: #2B3F62;
     font-size: 20px;
@@ -49,6 +49,10 @@ const BoxConatiner = styled.SafeAreaView`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+`;
+
+const CalendarContainer = styled.View`
+  width: ${({ width }) => (width - 60)}px;
 `;
 
 
@@ -181,12 +185,10 @@ export default function App({ navigation }) {
               type={images.update}
               onPressOut={() => navigation.navigate('AddTaskForm', { selectedDate })}/>
         </BoxConatiner>        
+        <CalendarContainer width={width}>
             <Calendar 
             theme={{
               todayTextColor: 'black',
-            }}
-            style={{
-              height: 300, // 원하는 높이로 설정
             }}
             showSixWeeks={false}
             borderBottomWidth = {width} 
@@ -194,6 +196,7 @@ export default function App({ navigation }) {
             onDayPress={(day) => handleDateSelect(day)}
             markedDates={markedDates}
             monthFormat={'M월'}/>        
+        </CalendarContainer>
         <SubTitle>그 날의 할 일</SubTitle>
         <List width={width}>
           {Object.values(tasks)
@@ -204,6 +207,7 @@ export default function App({ navigation }) {
                 item={item}
                 deleteTask={_deleteTask}
                 updateTask={_updateTask}
+                onPressOut={() => navigation.navigate('AddTaskForm', { item })}
               />
             ))}
         </List>

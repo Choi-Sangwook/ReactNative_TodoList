@@ -9,13 +9,14 @@ const Container = styled.View`
     height: 60px;
     width: ${({ width }) => (width - 40)}px;
     border-radius: 20px;
-    padding: 20px 20px;
+    padding: 20px 10px;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 `;
 
 const Contents = styled.Text`
+    margin: 0 10px;
     flex:1;
     color: #000;
     font-size: 16px;

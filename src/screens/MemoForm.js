@@ -33,7 +33,6 @@ const Input = styled.TextInput`
   background-color: #FFFFFF;
   border-radius: 15px;
   font-size: 20px
-  textAlignVertical: top;
 `;
 
 const Button = styled.TouchableOpacity`

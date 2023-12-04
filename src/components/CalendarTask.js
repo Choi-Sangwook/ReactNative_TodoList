@@ -21,7 +21,7 @@ const Contents = styled.Text`
   color: ${({ theme }) => theme.text};
 `;
 
-const CalendarTask = ({ item, deleteTask, updateTask }) => {
+const CalendarTask = ({ item, deleteTask, updateTask, onPressOut }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(item.text);
 
@@ -32,7 +32,7 @@ const CalendarTask = ({ item, deleteTask, updateTask }) => {
         <IconButton
           type={images.update}
           id={item.id}
-          onPressOut={updateTask}
+          onPressOut={onPressOut}
         />      
       <IconButton
         type={images.delete}

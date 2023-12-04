@@ -24,7 +24,7 @@ const Title = styled.Text`
   font-weight: 700;
   color: ${({ theme }) => theme.main};
   align-self: flex-start;
-  margin: 20px;
+  margin: 20px 0;
 `;
 const List = styled.ScrollView`
   margin:10px 0;
@@ -50,9 +50,12 @@ const BoxConatiner = styled.SafeAreaView`
 `;
 
 const BackButton = styled.TouchableOpacity`
+  height: 45px;
   background-color: #416AD7;
   padding: 10px;
   border-radius: 10px;
+  align-self:center;
+  margin: 0 10px;
 `;
 
 const BackButtonText = styled.Text`
@@ -62,6 +65,7 @@ const BackButtonText = styled.Text`
 
 const ViewStyle = styled(View)`
   flex-direction: row;
+  width: ${({ width }) => width - 40}px;  
   justify-content: space-between;
 `;
 
@@ -73,10 +77,10 @@ export default function App({navigation, route}) {
   const width = Dimensions.get('window').width;
 
   const [isReady, setIsReady] = useState(false);
-  const [newTask, setNewTask] = useState('');
-  const [newMemo, setNewMemo] = useState('');
+  const [newTask, setNewTask] = useState(route.params.item != null?route.params.item.text:'');
+  const [newMemo, setNewMemo] = useState(route.params.item != null?route.params.item.memo:'');
   const [tasks, setTasks] = useState({});
-  const [selectedDate, setSelectedDate] = useState(route.params.selectedDate);
+  const [selectedDate, setSelectedDate] = useState(route.params.item != null?route.params.item.date:route.params.selectedDate);
   
 
   const _saveTasks = async tasks => {
@@ -89,24 +93,29 @@ export default function App({navigation, route}) {
       console.error(e);
     }
   };
+
   const _loadTasks = async () => {
     const loadedTasks = await AsyncStorage.getItem('tasks');
     setTasks(JSON.parse(loadedTasks || '{}'));
   };
 
-  const _addTask = () => {
-    if (!newTask.trim() && !newMemo.trim()) {
-      // 입력된 텍스트나 메모가 없는 경우 처리 (예: 경고 메시지 또는 아무 작업도 하지 않음)
-      return;
-    }
-    const ID = Date.now().toString();
-    const newTaskObject = {
-      [ID]: { id: ID, text: newTask, completed: false, date: selectedDate, memo: newMemo, },
-    };
-    setNewTask('');
-    setNewMemo('');
-    _saveTasks({ ...tasks, ...newTaskObject });
-  };
+  // const _addTask = () => {
+  //   if (!newTask.trim() && !newMemo.trim()) {
+  //     // 입력된 텍스트나 메모가 없는 경우 처리 (예: 경고 메시지 또는 아무 작업도 하지 않음)
+  //     return;
+  //   }
+  //   const ID = (route.params.item != null?route.params.item.id:Date.now().toString());
+  //   console.log(ID);
+  //   const newTaskObject = {
+  //     [ID]: { id: ID, text: newTask, completed: false, date: selectedDate, memo: newMemo, },
+  //   };
+  //   setNewTask('');
+  //   setNewMemo('');
+  //   if(route.params.item != null) 
+  //     _updateTask(newTaskObject);
+  //   else 
+  //     _saveTasks({ ...tasks, ...newTaskObject });
+  // };
   const _deleteTask = id => {
     const currentTasks = Object.assign({}, tasks);
     delete currentTasks[id];
@@ -117,11 +126,51 @@ export default function App({navigation, route}) {
     currentTasks[id]['completed'] = !currentTasks[id]['completed'];
     _saveTasks(currentTasks);
   };
-  const _updateTask = item => {
-    const currentTasks = Object.assign({}, tasks);
-    currentTasks[item.id] = item;
-    _saveTasks(currentTasks);
+  // const _updateTask = item => {
+  //   const currentTasks = Object.assign({}, tasks);
+  //   currentTasks[item.id] = item;
+  //   _saveTasks(currentTasks);
+  // };
+
+  const _addTask = () => {
+    if (!newTask.trim() && !newMemo.trim()) {
+      // 입력된 텍스트나 메모가 없는 경우 처리 (예: 경고 메시지 또는 아무 작업도 하지 않음)
+      return;
+    }
+  
+    const ID = route.params.item != null ? route.params.item.id : Date.now().toString();
+    console.log(ID);
+  
+    const newTaskObject = {
+      id: ID,
+      text: newTask,
+      completed: false,
+      date: selectedDate,
+      memo: newMemo,
+    };
+  
+    setNewTask('');
+    setNewMemo('');
+  
+    if (route.params.item != null) {
+      _updateTask(ID, newTaskObject); // 기존 작업 객체의 ID를 사용하여 업데이트
+    } else {
+      _saveTasks({ ...tasks, [ID]: newTaskObject }); // 새로운 작업 객체를 기존 tasks에 추가
+    }
   };
+  
+  const _updateTask = (id, item) => {
+    setTasks(prevTasks => {
+      const updatedTasks = {
+        ...prevTasks,
+        [id]: item,
+      };
+      _saveTasks(updatedTasks);
+      return updatedTasks;
+    });
+  };
+
+
   const _handleTextChange = text=> {
     setNewTask(text);
   };
@@ -147,7 +196,7 @@ export default function App({navigation, route}) {
           barStyle="dark-content"
           backgroundColor={theme.background} // Android only
         />
-        <ViewStyle>
+        <ViewStyle width={width}>
           <Title>일정 등록</Title>
           <BackButton onPress={() => navigation.goBack()}>
             <BackButtonText>뒤로가기</BackButtonText>
