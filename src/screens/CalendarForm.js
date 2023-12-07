@@ -13,6 +13,7 @@ import PrograssBar from '../components/ProgressBar';
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTasksContext } from '../TaskContext';
+import {lightTheme, darkTheme} from '../theme'
 
 const Container = styled.SafeAreaView`
   flex: 1;
@@ -52,7 +53,7 @@ const BoxConatiner = styled.SafeAreaView`
 
 const BackButton = styled.TouchableOpacity`
   height: 45px;
-  background-color: #416AD7;
+  background-color: ${({ darkMode }) => darkMode ? darkTheme.itemCompletedBackground: '#416AD7'};
   padding: 10px;
   border-radius: 10px;
   align-self:center;
@@ -81,7 +82,7 @@ export default function App({navigation, route}) {
   const [newTask, setNewTask] = useState(route.params.item != null?route.params.item.text:'');
   const [newMemo, setNewMemo] = useState(route.params.item != null?route.params.item.memo:'');
   // const [tasks, setTasks] = useState({});
-  const { tasks, updateTasks } = useTasksContext();
+  const { tasks, updateTasks,darkMode } = useTasksContext();
   const [selectedDate, setSelectedDate] = useState(route.params.item != null?route.params.item.date:route.params.selectedDate);
   
 
@@ -169,7 +170,7 @@ export default function App({navigation, route}) {
   const completed = tasksValue.filter((task) => task.completed === true).length;
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
       <Container>
         <StatusBar
           barStyle={darkMode ? "light-content":"dark-content"}
@@ -177,7 +178,7 @@ export default function App({navigation, route}) {
         />
         <ViewStyle width={width}>
           <Title>일정 등록</Title>
-          <BackButton onPress={() => navigation.goBack()}>
+          <BackButton darkMode={darkMode} onPress={() => navigation.goBack() }>
             <BackButtonText>뒤로가기</BackButtonText>
           </BackButton>
         </ViewStyle>

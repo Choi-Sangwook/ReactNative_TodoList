@@ -1,10 +1,13 @@
 import React, {useState}  from 'react';
 import { TouchableOpacity, Text } from 'react-native';
-import styled from 'styled-components/native';
+import styled, { ThemeProvider } from 'styled-components/native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import PropTypes from 'prop-types';
+import { useTasksContext } from '../TaskContext';
+import {lightTheme, darkTheme} from '../theme'
+
 const Contents = styled.Text`
-    color: #fff;
+    color: ${({ darkMode }) => darkMode ? darkTheme.buttonText:lightTheme.buttonText};
     text-align: center;
     font-size:15px;
     font-weight: 700;
@@ -12,9 +15,9 @@ const Contents = styled.Text`
 
 const Container = styled.View`
     width: 90px;
-    background: #3E92FF;
+    background: ${({ darkMode }) => darkMode ? darkTheme.itemCompletedBackground: '#3E92FF'};
     height: 45px;
-    border: 1px solid #9EC8FF;
+    border: 1px solid ${({ darkMode }) => darkMode ? darkTheme.itemCompletedBackground: '#3E92FF'};
     border-radius: 15px;
     padding: 10px 15px;
     margin:0;
@@ -22,6 +25,7 @@ const Container = styled.View`
 
 const CustonButton = ({title, onDateChange}) => {
 const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+const { darkMode} = useTasksContext();
 
 const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -39,9 +43,10 @@ const handleConfirm = (date) => {
 };
 
   return (
+    <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
     <TouchableOpacity onPressOut={showDatePicker}>
-        <Container>
-            <Contents>{title}</Contents>
+        <Container darkMode={darkMode}>
+            <Contents darkMode={darkMode}>{title}</Contents>
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"
@@ -50,6 +55,7 @@ const handleConfirm = (date) => {
             />
         </Container>
     </TouchableOpacity>
+    </ThemeProvider>
   );
 };
 

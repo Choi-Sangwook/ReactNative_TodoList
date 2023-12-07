@@ -20,6 +20,7 @@ export const lightTheme = {
   toggleDone: "#17D313",
   toggleunfilledColor: "#00A3FF",
   toggleborderColor: "#00A3FF",
+  textInputBackColor: '#fff',
 };
 
 export const darkTheme = {
@@ -35,4 +36,5 @@ export const darkTheme = {
   toggleDone: "#fff",
   toggleborderColor: "grey",
   toggleunfilledColor: "grey",
+  textInputBackColor: 'grey',
 };

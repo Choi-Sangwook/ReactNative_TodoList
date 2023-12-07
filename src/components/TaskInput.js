@@ -1,7 +1,9 @@
 import React from 'react';
-import styled from 'styled-components/native';
+import styled, { ThemeProvider } from 'styled-components/native';
 import { Dimensions, useWindowDimensions} from 'react-native';
 import PropTypes from 'prop-types';
+import { useTasksContext } from '../TaskContext';
+import {lightTheme, darkTheme} from '../theme'
 
 const StyledInput = styled.TextInput.attrs(({ theme }) => ({
   placeholderTextColor: theme.main,
@@ -13,9 +15,9 @@ const StyledInput = styled.TextInput.attrs(({ theme }) => ({
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   border: 1px solid #919498;
-  background-color: #fff;
+  background-color: ${({ darkMode }) => darkMode ? darkTheme.textInputBackColor:lightTheme.textInputBackColor};
   font-size: 16px;
-  color: #7D7D7D;
+  color: ${({ darkMode }) => darkMode ? darkTheme.main:lightTheme.main};
   font-weight:400;
   margin:0;
 `;
@@ -29,10 +31,10 @@ const MemoInput = styled.TextInput.attrs(({ theme }) => ({
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     border: 1px solid #919498;
-    background-color: #fff;
+    background-color: ${({ darkMode }) => darkMode ? darkTheme.textInputBackColor:lightTheme.textInputBackColor};
     font-size: 16px;
     justify-content:flex-start;
-    color: #7D7D7D;
+    color: ${({ darkMode }) => darkMode ? darkTheme.main:lightTheme.main};
     font-weight:400;
     margin: 0;
   `;
@@ -51,32 +53,36 @@ const Input = ({
 }) => {
   const width = Dimensions.get('window').width;
   // const width = useWindowDimensions().width;
-
+  const { darkMode, updateDarkMode} = useTasksContext();
   return (
-    <Container>
-    <StyledInput
-      width={width}
-      placeholder="할일"
-      maxLength={50}
-      autoCapitalize="none"
-      autoCorrect={false}
-      returnKeyType="done"
-      keyboardAppearance="dark" // iOS only
-      value={value}
-      onChangeText={onChangeText}
-    />
-    <MemoInput
-      width={width}
-      placeholder="메모"
-      maxLength={50}
-      autoCapitalize="none"
-      autoCorrect={false}
-      returnKeyType="done"
-      keyboardAppearance="dark" // iOS only
-      value={memo}
-      onChangeText={onChangeTextMemo}
-    />
-    </Container>
+    <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
+      <Container>
+        <StyledInput
+          width={width}
+          placeholder="할일"
+          maxLength={50}
+          autoCapitalize="none"
+          autoCorrect={false}
+          returnKeyType="done"
+          keyboardAppearance="dark" // iOS only
+          value={value}
+          onChangeText={onChangeText}
+          darkMode={darkMode}
+        />
+        <MemoInput
+          width={width}
+          placeholder="메모"
+          maxLength={50}
+          autoCapitalize="none"
+          autoCorrect={false}
+          returnKeyType="done"
+          keyboardAppearance="dark" // iOS only
+          value={memo}
+          onChangeText={onChangeTextMemo}
+          darkMode={darkMode}
+        />
+      </Container>
+    </ThemeProvider>
   );
 };
 

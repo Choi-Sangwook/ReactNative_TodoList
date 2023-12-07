@@ -154,7 +154,7 @@ const MemoForm = ({ navigation, id }) => {
         </BackButton>
     </View>
       <Input
-        placeholder="메모를 작성하세요"
+        placeholder="메모를 작성하세요"      
         multiline
         value={memoText}
         onChangeText={(text) => setMemoText(text)}
