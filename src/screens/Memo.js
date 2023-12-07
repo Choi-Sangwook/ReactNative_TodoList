@@ -113,7 +113,7 @@ export default function App({ navigation }) {
       <Container>
       <StatusBar
           barStyle={darkMode ? "light-content":"dark-content"}
-          backgroundColor={theme.background} // Android only
+          backgroundColor={darkMode ? darkTheme.background:lightTheme.background} // Android only
         />
         <BoxConatiner width={width}>
             <Title>Note</Title>

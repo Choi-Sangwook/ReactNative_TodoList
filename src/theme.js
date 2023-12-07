@@ -1,5 +1,5 @@
 export const theme = {
-  background: '#F1F7FE',
+  background: '#000',
   itemCompletedBackground:'#D8FFEB',
   itemBackground: '#C2DCFF',
   main: '#2B3F62',
@@ -21,6 +21,7 @@ export const lightTheme = {
   toggleunfilledColor: "#00A3FF",
   toggleborderColor: "#00A3FF",
   textInputBackColor: '#fff',
+  buttonText: '#fff',
 };
 
 export const darkTheme = {
@@ -37,4 +38,5 @@ export const darkTheme = {
   toggleborderColor: "grey",
   toggleunfilledColor: "grey",
   textInputBackColor: 'grey',
+  buttonText: '#fff',
 };

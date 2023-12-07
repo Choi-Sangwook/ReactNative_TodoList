@@ -119,7 +119,7 @@ export default function App({navigation}) {
       <Container>
         <StatusBar
           barStyle={darkMode ? "light-content":"dark-content"}
-          backgroundColor={theme.background} // Android only
+          backgroundColor={darkMode ? darkTheme.background:lightTheme.background}  // Android only
         />
         <Title>Hi, User!</Title>
         <SubTitle>오늘의 할일</SubTitle>

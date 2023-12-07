@@ -174,7 +174,7 @@ export default function App({navigation, route}) {
       <Container>
         <StatusBar
           barStyle={darkMode ? "light-content":"dark-content"}
-          backgroundColor={theme.background} // Android only
+          backgroundColor={darkMode ? darkTheme.background:lightTheme.background} // Android only
         />
         <ViewStyle width={width}>
           <Title>일정 등록</Title>

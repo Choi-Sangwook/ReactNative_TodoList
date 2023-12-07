@@ -107,7 +107,7 @@ export default function App({navigation}) {
       <Container>
         <StatusBar
           barStyle={darkMode ? "light-content":"dark-content"}
-          backgroundColor={theme.background} // Android only
+          backgroundColor={darkMode ? darkTheme.background:lightTheme.background}  // Android only
         />
         <Title>Setting</Title>
         <SettingComponent title="다크 모드"/>
