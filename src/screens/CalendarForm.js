@@ -12,6 +12,7 @@ import DatePicker from '../components/DatePicker'
 import PrograssBar from '../components/ProgressBar';
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTasksContext } from '../TaskContext';
 
 const Container = styled.SafeAreaView`
   flex: 1;
@@ -79,19 +80,20 @@ export default function App({navigation, route}) {
   const [isReady, setIsReady] = useState(false);
   const [newTask, setNewTask] = useState(route.params.item != null?route.params.item.text:'');
   const [newMemo, setNewMemo] = useState(route.params.item != null?route.params.item.memo:'');
-  const [tasks, setTasks] = useState({});
+  // const [tasks, setTasks] = useState({});
+  const { tasks, updateTasks } = useTasksContext();
   const [selectedDate, setSelectedDate] = useState(route.params.item != null?route.params.item.date:route.params.selectedDate);
   
 
-  const _saveTasks = async tasks => {
-    try {
-      await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
-      setTasks(tasks);
+  const _saveTasks = () => {
       navigation.navigate('Calendar');
       console.log(tasks);
-    } catch (e) {
-      console.error(e);
-    }
+  };
+
+  const _deleteTask = id => {
+    const currentTasks = Object.assign({}, tasks);
+    delete currentTasks[id];
+    _saveTasks(currentTasks);
   };
 
   const _loadTasks = async () => {
@@ -99,38 +101,13 @@ export default function App({navigation, route}) {
     setTasks(JSON.parse(loadedTasks || '{}'));
   };
 
-  // const _addTask = () => {
-  //   if (!newTask.trim() && !newMemo.trim()) {
-  //     // 입력된 텍스트나 메모가 없는 경우 처리 (예: 경고 메시지 또는 아무 작업도 하지 않음)
-  //     return;
-  //   }
-  //   const ID = (route.params.item != null?route.params.item.id:Date.now().toString());
-  //   console.log(ID);
-  //   const newTaskObject = {
-  //     [ID]: { id: ID, text: newTask, completed: false, date: selectedDate, memo: newMemo, },
-  //   };
-  //   setNewTask('');
-  //   setNewMemo('');
-  //   if(route.params.item != null) 
-  //     _updateTask(newTaskObject);
-  //   else 
-  //     _saveTasks({ ...tasks, ...newTaskObject });
-  // };
-  const _deleteTask = id => {
-    const currentTasks = Object.assign({}, tasks);
-    delete currentTasks[id];
-    _saveTasks(currentTasks);
-  };
+
   const _toggleTask = id => {
     const currentTasks = Object.assign({}, tasks);
     currentTasks[id]['completed'] = !currentTasks[id]['completed'];
     _saveTasks(currentTasks);
   };
-  // const _updateTask = item => {
-  //   const currentTasks = Object.assign({}, tasks);
-  //   currentTasks[item.id] = item;
-  //   _saveTasks(currentTasks);
-  // };
+
 
   const _addTask = () => {
     if (!newTask.trim() && !newMemo.trim()) {
@@ -153,10 +130,12 @@ export default function App({navigation, route}) {
     setNewMemo('');
   
     if (route.params.item != null) {
-      _updateTask(ID, newTaskObject); // 기존 작업 객체의 ID를 사용하여 업데이트
-    } else {
-      _saveTasks({ ...tasks, [ID]: newTaskObject }); // 새로운 작업 객체를 기존 tasks에 추가
-    }
+      tasks[ID]=newTaskObject;
+      updateTasks(tasks); // 기존 작업 객체의 ID를 사용하여 업데이트
+    } 
+      updateTasks({ ...tasks, [ID]: newTaskObject }); // 새로운 작업 객체를 기존 tasks에 추가
+
+    _saveTasks();
   };
   
   const _updateTask = (id, item) => {
@@ -189,7 +168,7 @@ export default function App({navigation, route}) {
   const length = tasksValue.length;
   const completed = tasksValue.filter((task) => task.completed === true).length;
 
-  return isReady ? (
+  return (
     <ThemeProvider theme={theme}>
       <Container>
         <StatusBar
@@ -213,11 +192,5 @@ export default function App({navigation, route}) {
         <CustonButton width={width} title="등록" onPress={_addTask}/>
       </Container>
     </ThemeProvider>
-  ) : (
-    <AppLoading
-      startAsync={_loadTasks}
-      onFinish={() => setIsReady(true)}
-      onError={console.error}
-    />
-  );
+   );
 }

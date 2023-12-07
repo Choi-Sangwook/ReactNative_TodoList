@@ -8,6 +8,7 @@ import Box from '../components/Box';
 import PrograssBar from '../components/ProgressBar';
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTasksContext } from '../TaskContext';
 
 const Container = styled.SafeAreaView`
   flex: 1;
@@ -55,39 +56,40 @@ export default function App({navigation}) {
 
   const [isReady, setIsReady] = useState(false);
   const [newTask, setNewTask] = useState('');
-  const [tasks, setTasks] = useState({});
+  // const [tasks, setTasks] = useState({});
   const [toDayTasks, setTodayTasks] = useState({});
+  const { tasks, updateTasks } = useTasksContext();
 
-  const _saveTasks = async tasks => {
-    try {
-      await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
-      setTasks(tasks);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  const _loadTasks = async () => {
-    const loadedTasks = await AsyncStorage.getItem('tasks');
-    setTasks(JSON.parse(loadedTasks || '{}'));
-  };
+  // const _saveTasks = async tasks => {
+  //   try {
+  //     await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
+  //     setTasks(tasks);
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
+  // const _loadTasks = async () => {
+  //   const loadedTasks = await AsyncStorage.getItem('tasks');
+  //   setTasks(JSON.parse(loadedTasks || '{}'));
+  // };
 
   const _toggleTask = id => {
-    const currentTasks = Object.assign({}, tasks);
+    const currentTasks = Object.assign({}, tasks);;
     currentTasks[id]['completed'] = !currentTasks[id]['completed'];
-    _saveTasks(currentTasks);
+    updateTasks(currentTasks);
   };
 
   const _updateTask = item => {
-    const currentTasks = Object.assign({}, tasks);
+    const currentTasks = Object.assign({}, tasks);;
     currentTasks[item.id] = item;
-    _saveTasks(currentTasks);
+    updateTasks(currentTasks);
   };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       // 화면이 포커스를 얻을 때마다 메모 목록을 다시 불러옴
       console.log('화면이 포커스를 얻었습니다. 메모를 다시 불러옵니다.');
-      _loadTasks();
+      
     });
     return () => {
       // cleanup 함수를 반환하여 해당 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
@@ -110,7 +112,7 @@ export default function App({navigation}) {
   const length = tasksValue.length || 0;
   const completed = tasksValue.filter((task) => task.completed === true).length || 0;
 
-  return isReady ? (
+  return (
     <ThemeProvider theme={theme}>
       <Container>
         <StatusBar
@@ -147,11 +149,5 @@ export default function App({navigation}) {
         )}
       </Container>
     </ThemeProvider>
-  ) : (
-    <AppLoading
-      startAsync={_loadTasks}
-      onFinish={() => setIsReady(true)}
-      onError={console.error}
-    />
   );
 }

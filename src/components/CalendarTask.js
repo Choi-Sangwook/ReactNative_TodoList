@@ -34,11 +34,11 @@ const CalendarTask = ({ item, deleteTask, updateTask, onPressOut }) => {
           id={item.id}
           onPressOut={onPressOut}
         />      
-      <IconButton
-        type={images.delete}
-        id={item.id}
-        onPressOut={deleteTask}
-      />
+        <IconButton
+          type={images.delete}
+          id={item.id}
+          onPressOut={deleteTask}
+        />
     </Container>
   );
 };
