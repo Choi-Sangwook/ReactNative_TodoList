@@ -24,26 +24,10 @@ const Contents = styled.Text`
     completed ? 'line-through' : 'none'};
 `;
 
-const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
+const Task = ({ item, toggleTask}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(item.text);
 
-  const _handleUpdateButtonPress = () => {
-    setIsEditing(true);
-  };
-  const _onSubmitEditing = () => {
-    if (isEditing) {
-      const editedTask = Object.assign({}, item, { text });
-      setIsEditing(false);
-      updateTask(editedTask);
-    }
-  };
-  const _onBlur = () => {
-    if (isEditing) {
-      setIsEditing(false);
-      setText(item.text);
-    }
-  };
 
   const _handleTogglePress = () => {
     // Implement your toggle logic here
@@ -60,25 +44,8 @@ const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
   ) : (
     <Container completed={item.completed}>
       <ToggleButton onPress={_handleTogglePress} completed={item.completed} />
-      {/* <IconButton
-        type={item.completed ? images.completed : images.uncompleted}
-        id={item.id}
-        onPressOut={toggleTask}
-        completed={item.completed}
-      /> */}
       <Contents completed={item.completed}>{item.text}</Contents>
-      {/* {item.completed || (
-        <IconButton
-          type={images.update}
-          onPressOut={_handleUpdateButtonPress}
-        />
-      )} */}
-      {/* <IconButton
-        type={images.delete}
-        id={item.id}
-        onPressOut={deleteTask}
-        completed={item.completed}
-      /> */}
+
     </Container>
   );
 };
@@ -86,7 +53,6 @@ const Task = ({ item, deleteTask, toggleTask, updateTask }) => {
 Task.propTypes = {
   item: PropTypes.object.isRequired,
   toggleTask: PropTypes.func.isRequired,
-  updateTask: PropTypes.func.isRequired,
 };
 
 export default Task;

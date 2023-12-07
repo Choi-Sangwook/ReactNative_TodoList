@@ -2,9 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { View, Switch, StyleSheet } from 'react-native';
+import styled, { ThemeProvider } from 'styled-components/native';
+import { useTasksContext } from '../TaskContext';
+import {lightTheme, darkTheme} from '../theme'
 
 const ToggleButton = ({ onPress, completed }) => {
   const [isEnabled, setIsEnabled] = useState(completed);
+  const { darkMode, updateDarkMode} = useTasksContext();
 
   useEffect(() => {
     setIsEnabled(completed);
@@ -16,15 +20,17 @@ const ToggleButton = ({ onPress, completed }) => {
   };
 
   return (
+    <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
     <View style={styles.container}>
       <Switch
-        trackColor={{ false: '#00A3FF', true: '#17D313' }}
-        thumbColor={isEnabled ? '#f4f3f4' : '#f4f3f4'}
+        trackColor={{ false: darkMode ? darkTheme.toggleunfilledColor:lightTheme.toggleunfilledColor, true: darkMode ? darkTheme.toggleDone:lightTheme.toggleDone }}
+        thumbColor={isEnabled ? (darkMode ? darkTheme.tabBarColor:lightTheme.tabBarColor) : (darkMode ?darkTheme.tabBarColor:lightTheme.tabBarColor)}
         ios_backgroundColor="#3e3e3e"
         onValueChange={toggleSwitch}
-        value={isEnabled}
+        value={completed}
       />
     </View>
+    </ThemeProvider>
   );
 };
 

@@ -11,6 +11,7 @@ import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CalendarTask from '../components/CalendarTask';
 import { useTasksContext } from '../TaskContext';
+import {lightTheme, darkTheme} from '../theme'
 
 const Container = styled.SafeAreaView`
   flex: 1;
@@ -36,7 +37,7 @@ const List = styled.ScrollView`
 const SubTitle = styled.Text`
     margin: 20px;
     padding: 0 20px;
-    color: #2B3F62;
+    color: ${({ theme }) => theme.main};
     font-size: 20px;
     font-weight: 700;
     align-self: flex-start;
@@ -70,7 +71,7 @@ export default function App({ navigation }) {
   const [isReady, setIsReady] = useState(false); 
   const [loadTasks, setLoadTasks] =useState({});
   // const [tasks, setTasks] = useState({});
-  const { tasks, updateTasks } = useTasksContext();
+  const { tasks, updateTasks,darkMode } = useTasksContext();
   const [selectedDate, setSelectedDate] = useState(formattedToday);
   const [markedDates, setMarkedDates] = useState({});
 
@@ -176,10 +177,10 @@ export default function App({ navigation }) {
   }, [selectedDate]);
  
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
       <Container>
         <StatusBar
-          barStyle="dark-content"
+          barStyle={darkMode ? "light-content":"dark-content"}
           backgroundColor={theme.background} // Android only
         />
         <BoxConatiner width={width}>
@@ -191,7 +192,7 @@ export default function App({ navigation }) {
         <CalendarContainer width={width}>
             <Calendar 
             theme={{
-              todayTextColor: 'black',
+              todayTextColor: darkMode ?'white':'black',
             }}
             showSixWeeks={false}
             borderBottomWidth = {width} 

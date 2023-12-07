@@ -1,10 +1,12 @@
 import React from "react";
 import {Dimensions, View, Text } from 'react-native';
-import styled from 'styled-components/native';
+import styled , { ThemeProvider }from 'styled-components/native';
+import { useTasksContext } from '../TaskContext';
+import {lightTheme, darkTheme} from '../theme'
 
 
 const Container = styled.View`
-    background-color: ${props => props.title === '해야할 일'?'rgba(194, 220, 255, 0.45)':'rgba(216, 255, 235, 0.45)'};
+    background-color: ${(props) => props.title === '해야할 일'?(props.darkMode ? darkTheme.itemBackground:'rgba(194, 220, 255, 0.45)'):(props.darkMode ? darkTheme.itemBackground:'rgba(216, 255, 235, 0.45)')};
     height: 100px;
     width: ${({ width }) => (width - 60)/2}px;
     border-radius: 20px;
@@ -20,11 +22,14 @@ const Contents = styled.Text`
 `;
 
 const Box = props =>{
+    const { darkMode} = useTasksContext()|| {};
     return (
-        <Container title={props.title} width={props.width}>
+        <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
+        <Container title={props.title} width={props.width} darkMode={darkMode}>
             <Contents>{props.title}</Contents>
             <Contents>{props.count}</Contents>
         </Container>
+        </ThemeProvider>
     )
 };
 

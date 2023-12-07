@@ -172,7 +172,7 @@ export default function App({navigation, route}) {
     <ThemeProvider theme={theme}>
       <Container>
         <StatusBar
-          barStyle="dark-content"
+          barStyle={darkMode ? "light-content":"dark-content"}
           backgroundColor={theme.background} // Android only
         />
         <ViewStyle width={width}>

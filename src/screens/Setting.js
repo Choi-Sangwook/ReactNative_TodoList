@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StatusBar, Dimensions } from 'react-native';
 import styled, { ThemeProvider } from 'styled-components/native';
 import { theme } from '../theme';
+import SettingComponent from '../components/SettingComponent'
 import Input from '../components/Input';
 import Task from '../components/Task';
 import Box from '../components/Box';
@@ -32,7 +33,7 @@ const List = styled.ScrollView`
 
 const SubTitle = styled.Text`
     padding: 0 20px;
-    color: ${({ theme }) => theme.main};
+    color: #2B3F62;
     font-size: 16px;
     font-weight: 700;
     align-self: flex-start;
@@ -61,19 +62,6 @@ export default function App({navigation}) {
   const [toDayTasks, setTodayTasks] = useState({});
   const { tasks, updateTasks } = useTasksContext();
   const { darkMode, updateDarkMode} = useTasksContext();
-
-  // const _saveTasks = async tasks => {
-  //   try {
-  //     await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
-  //     setTasks(tasks);
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
-  // const _loadTasks = async () => {
-  //   const loadedTasks = await AsyncStorage.getItem('tasks');
-  //   setTasks(JSON.parse(loadedTasks || '{}'));
-  // };
 
   const _toggleTask = id => {
     const currentTasks = Object.assign({}, tasks);;
@@ -121,33 +109,8 @@ export default function App({navigation}) {
           barStyle={darkMode ? "light-content":"dark-content"}
           backgroundColor={theme.background} // Android only
         />
-        <Title>Hi, User!</Title>
-        <SubTitle>오늘의 할일</SubTitle>
-        <BoxConatiner width={width}>
-            <Box title = "해야할 일" count = {length} width={width}/>
-            <Box title = "완료한 일" count = {completed} width={width}/>
-        </BoxConatiner>
-        
-        <SubTitle>전체 진행도</SubTitle>
-        <PrograssBar completed={completed} length={length}/>
-        <SubTitle>목록</SubTitle>
-        {Object.values(toDayTasks).length === 0 ? ( 
-          <Container>
-            <SubTitle>오늘의 일과를 추가하세요.</SubTitle>
-          </Container>
-        ) : (
-        <List width={width}>
-          {Object.values(toDayTasks)
-            .reverse()
-            .map(item => (
-              <Task
-                key={item.id}
-                item={item}
-                toggleTask={_toggleTask}
-              />
-            ))}
-        </List>
-        )}
+        <Title>Setting</Title>
+        <SettingComponent title="다크 모드"/>
       </Container>
     </ThemeProvider>
   );

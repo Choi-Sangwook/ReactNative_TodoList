@@ -8,6 +8,8 @@ import {images} from '../images';
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native'; // 추가된 부분
+import { useTasksContext } from '../TaskContext';
+import {lightTheme, darkTheme} from '../theme'
 
 const Container = styled.SafeAreaView`
   flex: 1;
@@ -33,7 +35,7 @@ const List = styled.ScrollView`
 const SubTitle = styled.Text`
 margin: 20px;
     padding: 0 20px;
-    color: #2B3F62;
+    color: ${({ theme }) => theme.main};
     font-size: 20px;
     font-weight: 700;
     align-self: flex-start;
@@ -58,6 +60,8 @@ export default function App({ navigation }) {
  
   const [memos, setMemos] = useState({});
   const [searchKeyword, setSearchKeyword] = useState(''); //테스트
+
+  const { darkMode, updateDarkMode} = useTasksContext();
 
   const _saveMemos = async (memoData) => {
     try {
@@ -105,10 +109,10 @@ export default function App({ navigation }) {
   );
  
   return isReady ? (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
       <Container>
-        <StatusBar
-          barStyle="light-content"
+      <StatusBar
+          barStyle={darkMode ? "light-content":"dark-content"}
           backgroundColor={theme.background} // Android only
         />
         <BoxConatiner width={width}>
@@ -121,9 +125,11 @@ export default function App({ navigation }) {
           placeholder="메모를 검색하세요"
           value={searchKeyword}
           onChangeText={(text) => setSearchKeyword(text)}
+          placeholderTextColor={darkMode ? darkTheme.main : lightTheme.main}
           style={{
+            color: darkMode ? darkTheme.main : lightTheme.main,
             width: width - 40,
-            borderColor: 'gray',
+            borderColor: darkMode ? darkTheme.main : lightTheme.main,
             borderWidth: 1,
             borderRadius: 5,
             padding: 8,

@@ -1,116 +1,109 @@
-import React, { useState } from 'react';
-import { StatusBar, Dimensions } from 'react-native';
-import styled, { ThemeProvider } from 'styled-components/native';
-import { theme } from './theme';
-import Input from './components/Input';
-import Task from './components/Task';
-import AppLoading from 'expo-app-loading';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
+import { SafeAreaView} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; // npm install @react-navigation/bottom-tabs
+import { createStackNavigator } from '@react-navigation/stack'; // npm install @react-navigation/stack
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import HomeScreen from './screens/MainHome';
+import MemoScreen from './screens/Memo';
+import CalendarScreen from './screens/Canlendar';
+import MemoFormScreen from './screens/MemoForm';
+import CalendarFormScreen from './screens/CalendarForm'
+import SettingScreen from './screens/Setting'
+import { useTasksContext } from './TaskContext';
+import { ThemeProvider } from 'styled-components/native';
+import {lightTheme, darkTheme} from './theme'
 
-const Container = styled.SafeAreaView`
-  flex: 1;
-  background-color: ${({ theme }) => theme.background};
-  align-items: center;
-  justify-content: flex-start;
-`;
-const Title = styled.Text`
-  font-size: 40px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.main};
-  align-self: flex-start;
-  margin: 20px;
-`;
-const List = styled.ScrollView`
-  flex: 1;
-  width: ${({ width }) => width - 40}px;
-`;
 
-export default function App() {
-  const width = Dimensions.get('window').width;
+const Tab = createBottomTabNavigator();
+const MemoStack = createStackNavigator();
+const CalendarStack = createStackNavigator();
 
-  const [isReady, setIsReady] = useState(false);
-  const [newTask, setNewTask] = useState('');
-  const [tasks, setTasks] = useState({});
+const MemoStackScreen = () => (
+  <SafeAreaView style={{flex:2}}>
+  <MemoStack.Navigator
+    screenOptions={{
+      headerShown: false,
+    }}>
+    <MemoStack.Screen name="Memo" component={MemoScreen} />
+    <MemoStack.Screen name="AddMemoForm" component={MemoFormScreen} />
+  </MemoStack.Navigator>
+  </SafeAreaView>
+);
 
-  const _saveTasks = async tasks => {
-    try {
-      await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
-      setTasks(tasks);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  const _loadTasks = async () => {
-    const loadedTasks = await AsyncStorage.getItem('tasks');
-    setTasks(JSON.parse(loadedTasks || '{}'));
-  };
+const CalendarStackScreen = () => (
+  <CalendarStack.Navigator
+  screenOptions={{
+    headerShown: false,
+  }}>
+    <CalendarStack.Screen name="Calendar" component={CalendarScreen} />
+    <CalendarStack.Screen name="AddTaskForm" component={CalendarFormScreen} />
+  </CalendarStack.Navigator>
+);
 
-  const _addTask = () => {
-    const ID = Date.now().toString();
-    const newTaskObject = {
-      [ID]: { id: ID, text: newTask, completed: false },
-    };
-    setNewTask('');
-    _saveTasks({ ...tasks, ...newTaskObject });
-  };
-  const _deleteTask = id => {
-    const currentTasks = Object.assign({}, tasks);
-    delete currentTasks[id];
-    _saveTasks(currentTasks);
-  };
-  const _toggleTask = id => {
-    const currentTasks = Object.assign({}, tasks);
-    currentTasks[id]['completed'] = !currentTasks[id]['completed'];
-    _saveTasks(currentTasks);
-  };
-  const _updateTask = item => {
-    const currentTasks = Object.assign({}, tasks);
-    currentTasks[item.id] = item;
-    _saveTasks(currentTasks);
-  };
-
-  const _handleTextChange = text => {
-    setNewTask(text);
-  };
-  const _onBlur = () => {
-    setNewTask('');
-  };
-
-  return isReady ? (
-    <ThemeProvider theme={theme}>
-      <Container>
-        <StatusBar
-          barStyle="light-content"
-          backgroundColor={theme.background} // Android only
-        />
-        <Title>MemoList</Title>
-        <Input
-          placeholder="+ Add a Task"
-          value={newTask}
-          onChangeText={_handleTextChange}
-          onSubmitEditing={_addTask}
-          onBlur={_onBlur}
-        />
-        <List width={width}>
-          {Object.values(tasks)
-            .reverse()
-            .map(item => (
-              <Task
-                key={item.id}
-                item={item}
-                deleteTask={_deleteTask}
-                toggleTask={_toggleTask}
-                updateTask={_updateTask}
-              />
-            ))}
-        </List>
-      </Container>
+const App = () => {
+  const { darkMode} = useTasksContext();
+  return (
+    <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
+    <NavigationContainer >
+          <Tab.Navigator 
+            initialRouteName="Home"
+            screenOptions={{
+              tabBarActiveTintColor: darkMode ? darkTheme.tabBarActiveTintColor : lightTheme.tabBarActiveTintColor,
+              tabBarInactiveTintColor: darkMode ? darkTheme.tabBarInactiveTintColor : lightTheme.tabBarInactiveTintColor,
+              tabBarStyle: {
+                display: 'flex',
+                backgroundColor: darkMode ? darkTheme.tabBarColor : lightTheme.tabBarColor,
+              },
+            }}>
+            <Tab.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{
+                title: 'Home',
+                tabBarIcon: ({color, size}) => (
+                  <Icon name="home" color={color} size={size} />
+                ),
+                headerShown: false,
+              }}
+            />
+            <Tab.Screen
+              name="Note"
+              component={MemoStackScreen}
+              options={{
+                title: 'Note',
+                tabBarIcon: ({color, size}) => (
+                  <Icon name="description" color={color} size={size} />
+                ),
+                headerShown: false,
+              }}
+            />
+            <Tab.Screen
+              name="Task"
+              component={CalendarStackScreen}
+              options={{
+                title: 'Calendar',
+                tabBarIcon: ({color, size}) => (
+                  <Icon name="event" color={color} size={size} />
+                ),
+                headerShown: false,
+              }}
+            />
+            <Tab.Screen
+              name="Setting"
+              component={SettingScreen}
+              options={{
+                title: 'Settings',
+                tabBarIcon: ({color, size}) => (
+                  <Icon name="settings" color={color} size={size} />
+                ),
+                headerShown: false,
+              }}
+            />
+          </Tab.Navigator>
+    </NavigationContainer>
     </ThemeProvider>
-  ) : (
-    <AppLoading
-      startAsync={_loadTasks}
-      onFinish={() => setIsReady(true)}
-      onError={console.error}
-    />
   );
-}
+};
+
+export default App;
