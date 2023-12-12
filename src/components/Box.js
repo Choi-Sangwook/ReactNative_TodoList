@@ -1,5 +1,4 @@
 import React from "react";
-import {Dimensions, View, Text } from 'react-native';
 import styled , { ThemeProvider }from 'styled-components/native';
 import { useTasksContext } from '../TaskContext';
 import {lightTheme, darkTheme} from '../theme'

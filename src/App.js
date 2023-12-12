@@ -1,8 +1,8 @@
 import React from 'react';
 import { SafeAreaView} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; // npm install @react-navigation/bottom-tabs
-import { createStackNavigator } from '@react-navigation/stack'; // npm install @react-navigation/stack
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import HomeScreen from './screens/MainHome';
 import MemoScreen from './screens/Memo';

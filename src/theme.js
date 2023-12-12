@@ -1,5 +1,5 @@
 export const theme = {
-  background: '#000',
+  background: '#F1F7FE',
   itemCompletedBackground:'#D8FFEB',
   itemBackground: '#C2DCFF',
   main: '#2B3F62',
@@ -25,12 +25,12 @@ export const lightTheme = {
 };
 
 export const darkTheme = {
-  background: '#000', // 다크 모드 배경색
-  itemCompletedBackground: '#474747', // 다크 모드에서 완료된 항목 배경색
-  itemBackground: '#979797', // 다크 모드에서 항목 배경색
-  main: '#fff', // 다크 모드에서의 주요 색상
-  text: '#fff', // 다크 모드에서의 텍스트 색상
-  done: '#616161', // 다크 모드에서 완료된 항목 텍스트 색상
+  background: '#000', 
+  itemCompletedBackground: '#474747', 
+  itemBackground: '#979797',
+  main: '#fff', 
+  text: '#fff',
+  done: '#616161',
   tabBarColor: '#5A5A5A',
   tabBarActiveTintColor:'#000',
   tabBarInactiveTintColor: '#fff',

@@ -2,7 +2,6 @@ import React, {useState}  from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import styled, { ThemeProvider } from 'styled-components/native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import PropTypes from 'prop-types';
 import { useTasksContext } from '../TaskContext';
 import {lightTheme, darkTheme} from '../theme'
 
@@ -62,12 +61,5 @@ const handleConfirm = (date) => {
 CustonButton.defaultProps = {
   onPressOut: () => {},
 };
-
-// CustonButton.propTypes = {
-//   type: PropTypes.oneOf(Object.values(images)).isRequired,
-//   onPressOut: PropTypes.func,
-//   id: PropTypes.string,
-//   completed: PropTypes.bool,
-// };
 
 export default CustonButton;

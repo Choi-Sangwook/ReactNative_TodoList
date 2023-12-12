@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar, Dimensions } from 'react-native';
 import styled, { ThemeProvider } from 'styled-components/native';
-import { theme } from '../theme';
 import MemoTask from '../components/MemoTask';
 import IconButton from '../components/IconButton';
 import {images} from '../images';
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TextInput } from 'react-native'; // 추가된 부분
+import { TextInput } from 'react-native';
 import { useTasksContext } from '../TaskContext';
 import {lightTheme, darkTheme} from '../theme'
 
@@ -59,9 +58,9 @@ export default function App({ navigation }) {
   const [isReady, setIsReady] = useState(false);
  
   const [memos, setMemos] = useState({});
-  const [searchKeyword, setSearchKeyword] = useState(''); //테스트
+  const [searchKeyword, setSearchKeyword] = useState('');
 
-  const { darkMode, updateDarkMode} = useTasksContext();
+  const { darkMode} = useTasksContext();
 
   const _saveMemos = async (memoData) => {
     try {
@@ -74,9 +73,7 @@ export default function App({ navigation }) {
 
   const _loadMemos = async () => {
     try {
-      console.log('메모를 불러오는 중...');
       const loadedMemos = await AsyncStorage.getItem('memos');
-      console.log('로드된 메모:', loadedMemos);
       setMemos(JSON.parse(loadedMemos || '{}'));
     } catch (error) {
       console.error(error);
@@ -85,8 +82,6 @@ export default function App({ navigation }) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      // 화면이 포커스를 얻을 때마다 메모 목록을 다시 불러옴
-      console.log('화면이 포커스를 얻었습니다. 메모를 다시 불러옵니다.');
       _loadMemos();
     });
 
@@ -103,7 +98,7 @@ export default function App({ navigation }) {
     navigation.navigate('AddMemoForm', { id: id });
   };
 
-  const filteredMemos = Object.values(memos).filter( //ㅈ테스트
+  const filteredMemos = Object.values(memos).filter( 
     (memo) =>
       memo.contents.includes(searchKeyword) || memo.title.includes(searchKeyword)
   );
@@ -113,7 +108,7 @@ export default function App({ navigation }) {
       <Container>
       <StatusBar
           barStyle={darkMode ? "light-content":"dark-content"}
-          backgroundColor={darkMode ? darkTheme.background:lightTheme.background} // Android only
+          backgroundColor={darkMode ? darkTheme.background:lightTheme.background}
         />
         <BoxConatiner width={width}>
             <Title>Note</Title>

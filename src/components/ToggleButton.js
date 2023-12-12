@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { View, Switch, StyleSheet } from 'react-native';
-import styled, { ThemeProvider } from 'styled-components/native';
+import { ThemeProvider } from 'styled-components/native';
 import { useTasksContext } from '../TaskContext';
 import {lightTheme, darkTheme} from '../theme'
 
 const ToggleButton = ({ onPress, completed }) => {
   const [isEnabled, setIsEnabled] = useState(completed);
-  const { darkMode, updateDarkMode} = useTasksContext();
+  const { darkMode} = useTasksContext();
 
   useEffect(() => {
     setIsEnabled(completed);

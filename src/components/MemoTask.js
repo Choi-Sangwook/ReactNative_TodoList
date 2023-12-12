@@ -3,7 +3,6 @@ import styled from 'styled-components/native';
 import PropTypes from 'prop-types';
 import IconButton from './IconButton';
 import { images } from '../images';
-import Input from './Input';
 
 const Container = styled.View`
   flex-direction: row;
@@ -22,10 +21,6 @@ const Contents = styled.Text`
 `;
 
 const MemoTask = ({ item, deleteMemo, updateMemo }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [text, setText] = useState(item.text);
-
-  
   return (
     <Container>
       <Contents>{item.title}</Contents>

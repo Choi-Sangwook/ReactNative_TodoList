@@ -25,7 +25,7 @@ const BarText = styled.Text`
 `;
  
 const ProgressBar = props => {
-  const { darkMode, updateDarkMode} = useTasksContext();
+  const { darkMode} = useTasksContext();
 
   const completedValue = props.completed || 0;
   const lengthValue = props.length || 0;

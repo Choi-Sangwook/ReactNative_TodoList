@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar, Dimensions, TextInput, TouchableOpacity, View } from 'react-native';
+import { StatusBar, Dimensions,  View,Keyboard  } from 'react-native';
 import styled, { ThemeProvider } from 'styled-components/native';
 import { theme } from '../theme';
-import IconButton from '../components/IconButton';
-import {images} from '../images';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-toast-message'; //npm install react-native-toast-message
+import Toast from 'react-native-toast-message';
 
 
 const Container = styled.SafeAreaView`
@@ -101,7 +100,7 @@ const MemoForm = ({ navigation, id }) => {
     };
     try {
       const existingMemos = await AsyncStorage.getItem('memos');
-      const value = existingMemos ? JSON.parse(existingMemos) : {}; // 기존 메모 데이터 또는 빈 객체로 초기화
+      const value = existingMemos ? JSON.parse(existingMemos) : {}; 
       setMemoText('');
       await _saveMemo({ ...value, ...newMemoObject });
       
@@ -113,10 +112,8 @@ const MemoForm = ({ navigation, id }) => {
   
   const _saveMemo = async (memoData) => {
     try {
-      console.log('메모를 저장하는 중...');
       await AsyncStorage.setItem('memos', JSON.stringify(memoData));
       navigation.navigate('Memo');
-      console.log('메모 저장 완료:', memoData);
     } catch (error) {
       console.error('메모 저장 오류:', error);
     }
@@ -134,26 +131,27 @@ const MemoForm = ({ navigation, id }) => {
     if (memoText && memoText.trim() !== '') {
       if(id === undefined){
       _addMemo();      
-      console.log('최초 저장된 메모:', memoText);
       }else {
         _updateMemo();        
-        console.log('수정된 메모:', memoText);
       }
     } else {
-      console.log('메모 텍스트가 없어 저장되지 않았습니다.');
       showToast('메모 텍스트가 없거나 빈 문자열이어서 저장되지 않았습니다.'); // 알림 추가
     }
   };
 
   return (
     <Container>
+
     <View style={{ width: Dimensions.get('window').width * 0.9,flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Title>메모 입력</Title>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>  
+    <Title>메모 입력</Title>
+      </TouchableWithoutFeedback>
       <BackButton onPress={() => navigation.goBack()}>
           <BackButtonText>뒤로가기</BackButtonText>
         </BackButton>
+        
     </View>
-      <Input
+    <Input
         placeholder="메모를 작성하세요"      
         multiline
         value={memoText}
@@ -169,7 +167,6 @@ const MemoForm = ({ navigation, id }) => {
 const MemoFormPage = ({ navigation, route}) => {
 
   const { id } = route.params || {id: undefined};
-  console.log(route.params);
   return (
     <ThemeProvider theme={theme}>
       <StatusBar barStyle="dark-content" />

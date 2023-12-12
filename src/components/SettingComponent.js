@@ -1,18 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { View, Switch, StyleSheet } from 'react-native';
+import React, { useState} from 'react';
+import {  Switch } from 'react-native';
 import styled,{ ThemeProvider } from 'styled-components/native';
-import PropTypes from 'prop-types';
-import IconButton from './IconButton';
-import { images } from '../images';
-import Input from './Input';
-import ToggleButton from './ToggleButton';
 import { useTasksContext } from '../TaskContext';
 import {lightTheme, darkTheme} from '../theme'
 
 const Container = styled.View`
   flex-direction: row;
   align-items: center;
-  /* background-color: ${({ theme}) => theme.itemCompletedBackground}; */
   background-color: ${({ theme,darkMode }) => (darkMode ? theme.itemCompletedBackground : theme.itemBackground)};
   border-radius: 10px;
   padding: 5px;

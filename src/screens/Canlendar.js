@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar, Dimensions } from 'react-native';
 import styled, { ThemeProvider } from 'styled-components/native';
-import { theme } from '../theme';
-import Task from '../components/Task';
 import IconButton from '../components/IconButton';
-import CalendarView from '../components/CalendarView';
 import {images} from '../images';
 import { Calendar } from "react-native-calendars";
-import AppLoading from 'expo-app-loading';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import CalendarTask from '../components/CalendarTask';
 import { useTasksContext } from '../TaskContext';
 import {lightTheme, darkTheme} from '../theme'
@@ -61,16 +56,12 @@ const CalendarContainer = styled.View`
 
 export default function App({ navigation }) {
   const width = Dimensions.get('window').width;
-  // 오늘 날짜 정보
   const today = new Date();
   const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더하고, 1자리 수 월은 0을 붙여줍니다.
-  const day = String(today.getDate()).padStart(2, '0'); // 날짜도 1자리 수일 경우 0을 붙여줍니다.
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
   const formattedToday = `${year}-${month}-${day}`;
-
-  const [isReady, setIsReady] = useState(false); 
   const [loadTasks, setLoadTasks] =useState({});
-  // const [tasks, setTasks] = useState({});
   const { tasks, updateTasks,darkMode } = useTasksContext();
   const [selectedDate, setSelectedDate] = useState(formattedToday);
   const [markedDates, setMarkedDates] = useState({});
@@ -79,25 +70,24 @@ export default function App({ navigation }) {
   
 
   const _loadTasks = async () => {
-    setLoadTasks(tasks); //화면 진입시 일과들 모두 로딩해서 상태 변수로 저장.
+    setLoadTasks(tasks);
     setMarkedDates({});
     const markedDatesObject = {
       ...tasks,
       [selectedDate]: {
         selected: true,
         marked: false,
-        dots: [{ color: 'green' }], // 마커 색깔 등 설정 가능
+        dots: [{ color: 'green' }], 
       },
     };
     Object.keys(tasks).forEach((taskId) => {
     const task = tasks[taskId];
     markedDatesObject[task.date] = {
       selected: markedDatesObject[task.date]?.selected || false,
-      dots: [{ color: 'green' }], // 마커 색깔 등 설정 가능
+      dots: [{ color: 'green' }], 
       marked: true,
     };
   });
-  console.log('loadTasksStatus', markedDatesObject);
   await setMarkedDates(markedDatesObject);
   await _selectedDateTasks();
   };
@@ -109,19 +99,13 @@ export default function App({ navigation }) {
       obj[key] = tasks[key];
       return obj;
     }, {});
-  // 일정 및 마커 갱신
-  console.log('dsd', selectedDateTasks);
   setLoadTasks(selectedDateTasks);
-  // updateTasks(selectedDateTasks);
   };
 
   const _deleteTask = async(id)=> {
     const currentTasks = Object.assign({}, tasks);
     delete currentTasks[id];
-    console.log(currentTasks);
-    console.log(id)
     await updateTasks(currentTasks);
-    console.log('삭제 후 상태', currentTasks);
   };
 
   useEffect(() => {
@@ -144,7 +128,7 @@ export default function App({ navigation }) {
         selected: false,
       };
     }
-    // 선택된 날짜에 selected 표시
+
     updatedMarkedDates[dateString] = {
     selected: true,
     marked: updatedMarkedDates[dateString]?.marked || false,
@@ -152,27 +136,20 @@ export default function App({ navigation }) {
     };
     console.log(updatedMarkedDates[dateString]);
     setMarkedDates(updatedMarkedDates);
-       // 여기서 선택한 날짜에 대한 처리를 추가할 수 있습니다.
     _selectedDateTasks();    
   };
 
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
-      // 화면이 포커스를 얻을 때마다 메모 목록을 다시 불러옴
-      console.log('화면이 포커스를 얻었습니다. 캘린더를 다시 불러옵니다.');
       setSelectedDate(selectedDate!==null?selectedDate:formattedToday);
       await _loadTasks();   
-      console.log(tasks);
-      console.log('선택된 날짜', selectedDate, formattedToday);
-      console.log(markedDates);
     });
 
     return unsubscribe;
   }, [navigation, formattedToday,tasks,loadTasks,markedDates]);
   
   useEffect(() => {
-    // useEffect 내부에서 _selectedDateTasks를 호출하여 동기화 처리
     _selectedDateTasks();
   }, [selectedDate]);
  

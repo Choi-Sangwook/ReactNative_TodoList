@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import {Dimensions, View, Text } from 'react-native';
+import React from "react";
 import styled, { ThemeProvider } from 'styled-components/native';
 import DatePicker from './DatePicker'
 import { useTasksContext } from '../TaskContext';

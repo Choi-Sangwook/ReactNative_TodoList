@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar, Dimensions } from 'react-native';
 import styled, { ThemeProvider } from 'styled-components/native';
-import { theme } from '../theme';
-import Input from '../components/Input';
 import Task from '../components/Task';
 import Box from '../components/Box';
 import PrograssBar from '../components/ProgressBar';
-import AppLoading from 'expo-app-loading';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTasksContext } from '../TaskContext';
 import {lightTheme, darkTheme} from '../theme'
 
@@ -48,32 +44,11 @@ const BoxConatiner = styled.SafeAreaView`
 `;
 
 
-
-
-
-
 export default function App({navigation}) {
   const width = Dimensions.get('window').width;
-
-  const [isReady, setIsReady] = useState(false);
-  const [newTask, setNewTask] = useState('');
-  // const [tasks, setTasks] = useState({});
   const [toDayTasks, setTodayTasks] = useState({});
   const { tasks, updateTasks } = useTasksContext();
-  const { darkMode, updateDarkMode} = useTasksContext();
-
-  // const _saveTasks = async tasks => {
-  //   try {
-  //     await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
-  //     setTasks(tasks);
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // };
-  // const _loadTasks = async () => {
-  //   const loadedTasks = await AsyncStorage.getItem('tasks');
-  //   setTasks(JSON.parse(loadedTasks || '{}'));
-  // };
+  const { darkMode} = useTasksContext();
 
   const _toggleTask = id => {
     const currentTasks = Object.assign({}, tasks);;
@@ -81,20 +56,9 @@ export default function App({navigation}) {
     updateTasks(currentTasks);
   };
 
-  const _updateTask = item => {
-    const currentTasks = Object.assign({}, tasks);;
-    currentTasks[item.id] = item;
-    updateTasks(currentTasks);
-  };
-
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      // 화면이 포커스를 얻을 때마다 메모 목록을 다시 불러옴
-      console.log('화면이 포커스를 얻었습니다. 메모를 다시 불러옵니다.');
-      
-    });
+    const unsubscribe = navigation.addListener('focus', () => {});
     return () => {
-      // cleanup 함수를 반환하여 해당 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
       unsubscribe();
     };
   }, []);    
@@ -119,7 +83,7 @@ export default function App({navigation}) {
       <Container>
         <StatusBar
           barStyle={darkMode ? "light-content":"dark-content"}
-          backgroundColor={darkMode ? darkTheme.background:lightTheme.background}  // Android only
+          backgroundColor={darkMode ? darkTheme.background:lightTheme.background}
         />
         <Title>Hi, User!</Title>
         <SubTitle>오늘의 할일</SubTitle>

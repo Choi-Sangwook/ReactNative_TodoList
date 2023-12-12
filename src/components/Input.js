@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { Dimensions, useWindowDimensions } from 'react-native';
+import { Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 
 const StyledInput = styled.TextInput.attrs(({ theme }) => ({
@@ -24,7 +24,6 @@ const Input = ({
   onBlur,
 }) => {
   const width = Dimensions.get('window').width;
-  // const width = useWindowDimensions().width;
 
   return (
     <StyledInput
@@ -34,7 +33,7 @@ const Input = ({
       autoCapitalize="none"
       autoCorrect={false}
       returnKeyType="done"
-      keyboardAppearance="dark" // iOS only
+      keyboardAppearance="dark"
       value={value}
       onChangeText={onChangeText}
       onSubmitEditing={onSubmitEditing}

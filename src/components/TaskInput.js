@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { ThemeProvider } from 'styled-components/native';
-import { Dimensions, useWindowDimensions} from 'react-native';
+import { Dimensions} from 'react-native';
 import PropTypes from 'prop-types';
 import { useTasksContext } from '../TaskContext';
 import {lightTheme, darkTheme} from '../theme'
@@ -52,7 +52,6 @@ const Input = ({
   onChangeTextMemo,
 }) => {
   const width = Dimensions.get('window').width;
-  // const width = useWindowDimensions().width;
   const { darkMode, updateDarkMode} = useTasksContext();
   return (
     <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
@@ -64,7 +63,7 @@ const Input = ({
           autoCapitalize="none"
           autoCorrect={false}
           returnKeyType="done"
-          keyboardAppearance="dark" // iOS only
+          keyboardAppearance="dark"
           value={value}
           onChangeText={onChangeText}
           darkMode={darkMode}
@@ -76,7 +75,7 @@ const Input = ({
           autoCapitalize="none"
           autoCorrect={false}
           returnKeyType="done"
-          keyboardAppearance="dark" // iOS only
+          keyboardAppearance="dark"
           value={memo}
           onChangeText={onChangeTextMemo}
           darkMode={darkMode}

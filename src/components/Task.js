@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components/native';
 import PropTypes from 'prop-types';
-import IconButton from './IconButton';
-import { images } from '../images';
 import Input from './Input';
 import ToggleButton from './ToggleButton';
 
 const Container = styled.View`
   flex-direction: row;
   align-items: center;
-  /* background-color: ${({ theme}) => theme.itemCompletedBackground}; */
   background-color: ${({ theme,completed }) => (completed ? theme.itemCompletedBackground : theme.itemBackground)};
   border-radius: 10px;
   padding: 5px;
@@ -22,6 +19,7 @@ const Contents = styled.Text`
   color: ${({ theme, completed }) => (completed ? theme.done : theme.text)};
   text-decoration-line: ${({ completed }) =>
     completed ? 'line-through' : 'none'};
+    margin: 0 20px;
 `;
 
 const Task = ({ item, toggleTask}) => {
@@ -30,7 +28,6 @@ const Task = ({ item, toggleTask}) => {
 
 
   const _handleTogglePress = () => {
-    // Implement your toggle logic here
     toggleTask(item.id);
   };
 

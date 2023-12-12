@@ -1,7 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import styled , { ThemeProvider } from 'styled-components/native';
-import PropTypes from 'prop-types';
 import { useTasksContext } from '../TaskContext';
 import {lightTheme, darkTheme} from '../theme'
 const Contents = styled.Text`
@@ -22,9 +21,6 @@ const Container = styled.View`
 `;
 
 const CustonButton = props => {
-//   const _onPressOut = () => {
-//     onPressOut(id);
-//   };
 const { darkMode } = useTasksContext();
   return (
     <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
@@ -40,12 +36,5 @@ const { darkMode } = useTasksContext();
 CustonButton.defaultProps = {
   onPressOut: () => {},
 };
-
-// CustonButton.propTypes = {
-//   type: PropTypes.oneOf(Object.values(images)).isRequired,
-//   onPressOut: PropTypes.func,
-//   id: PropTypes.string,
-//   completed: PropTypes.bool,
-// };
 
 export default CustonButton;
