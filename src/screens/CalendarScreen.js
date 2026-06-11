@@ -7,7 +7,7 @@ import { Title, SubTitle } from '../components/ui/Typography';
 import IconButton from '../components/IconButton';
 import CalendarTask from '../components/CalendarTask';
 import { images } from '../images';
-import { useTasksContext } from '../TaskContext';
+import { useTasksContext } from '../contexts/TasksContext';
 import { todayString } from '../utils/date';
 
 const HeaderRow = styled.View`

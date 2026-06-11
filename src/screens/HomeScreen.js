@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useWindowDimensions } from 'react-native';
 import styled from 'styled-components/native';
 import Screen from '../components/ui/Screen';
@@ -6,7 +6,7 @@ import { Title, SubTitle } from '../components/ui/Typography';
 import Task from '../components/Task';
 import Box from '../components/Box';
 import ProgressBar from '../components/ProgressBar';
-import { useTasksContext } from '../TaskContext';
+import { useTasksContext } from '../contexts/TasksContext';
 import { todayString } from '../utils/date';
 
 const SummaryRow = styled.View`
@@ -25,7 +25,6 @@ const List = styled.ScrollView`
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
-  const [todayTasks, setTodayTasks] = useState({});
   const { tasks, updateTasks } = useTasksContext();
 
   const toggleTask = (id) => {
@@ -34,15 +33,12 @@ export default function HomeScreen() {
     updateTasks(next);
   };
 
-  useEffect(() => {
-    const today = todayString();
-    const list = Object.values(tasks).filter((task) => task.date === today);
-    setTodayTasks(list.reduce((acc, task) => ({ ...acc, [task.id]: task }), {}));
-  }, [tasks]);
-
-  const values = Object.values(todayTasks);
-  const length = values.length;
-  const completed = values.filter((task) => task.completed).length;
+  const todayTasks = useMemo(
+    () => Object.values(tasks).filter((task) => task.date === todayString()),
+    [tasks]
+  );
+  const length = todayTasks.length;
+  const completed = todayTasks.filter((task) => task.completed).length;
 
   return (
     <Screen>
@@ -61,7 +57,7 @@ export default function HomeScreen() {
         <SubTitle>오늘의 일과를 추가하세요.</SubTitle>
       ) : (
         <List width={width}>
-          {values.reverse().map((item) => (
+          {[...todayTasks].reverse().map((item) => (
             <Task key={item.id} item={item} toggleTask={toggleTask} />
           ))}
         </List>

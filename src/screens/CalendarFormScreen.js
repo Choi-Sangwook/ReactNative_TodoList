@@ -6,7 +6,7 @@ import { Title } from '../components/ui/Typography';
 import DateBox from '../components/DateBox';
 import TaskInput from '../components/TaskInput';
 import CustomButton from '../components/CustomButton';
-import { useTasksContext } from '../TaskContext';
+import { useTasksContext } from '../contexts/TasksContext';
 
 const HeaderRow = styled.View`
   flex-direction: row;

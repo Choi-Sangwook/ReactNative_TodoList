@@ -1,9 +1,9 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import Toast from 'react-native-toast-message';
-import { TasksProvider } from './src/TaskContext';
-import { MemosProvider } from './src/MemosContext';
-import AppMain from './src/App';
+import { TasksProvider } from './src/contexts/TasksContext';
+import { MemosProvider } from './src/contexts/MemosContext';
+import AppMain from './src/navigation/AppNavigator';
 
 const App = () => {
   return (

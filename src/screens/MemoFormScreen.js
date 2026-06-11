@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 import Toast from 'react-native-toast-message';
 import Screen from '../components/ui/Screen';
 import { Title } from '../components/ui/Typography';
-import { useMemosContext } from '../MemosContext';
+import { useMemosContext } from '../contexts/MemosContext';
 
 const HeaderRow = styled.View`
   width: ${({ width }) => width - 40}px;

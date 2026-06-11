@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch } from 'react-native';
 import styled, { useTheme } from 'styled-components/native';
-import { useTasksContext } from '../TaskContext';
+import { useTasksContext } from '../contexts/TasksContext';
 
 const Container = styled.View`
   flex-direction: row;

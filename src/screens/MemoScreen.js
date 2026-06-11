@@ -6,7 +6,7 @@ import { Title, SubTitle } from '../components/ui/Typography';
 import MemoTask from '../components/MemoTask';
 import IconButton from '../components/IconButton';
 import { images } from '../images';
-import { useMemosContext } from '../MemosContext';
+import { useMemosContext } from '../contexts/MemosContext';
 
 const HeaderRow = styled.View`
   width: ${({ width }) => width - 40}px;
