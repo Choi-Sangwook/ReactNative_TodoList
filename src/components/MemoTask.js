@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
 import PropTypes from 'prop-types';
 import IconButton from './IconButton';
@@ -7,36 +7,26 @@ import { images } from '../images';
 const Container = styled.View`
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme}) => theme.itemBackground};
+  background-color: ${({ theme }) => theme.itemBackground};
   border-radius: 15px;
   padding: 5px;
   margin: 3px 0px;
 `;
 
 const Contents = styled.Text`
-  padding:0 20px;
+  padding: 0 20px;
   flex: 1;
   font-size: 24px;
   color: ${({ theme }) => theme.text};
 `;
 
-const MemoTask = ({ item, deleteMemo, updateMemo }) => {
-  return (
-    <Container>
-      <Contents>{item.title}</Contents>
-        <IconButton
-          type={images.update}
-          id={item.id}
-          onPressOut={updateMemo}
-        />      
-      <IconButton
-        type={images.delete}
-        id={item.id}
-        onPressOut={deleteMemo}
-      />
-    </Container>
-  );
-};
+const MemoTask = ({ item, deleteMemo, updateMemo }) => (
+  <Container>
+    <Contents>{item.title}</Contents>
+    <IconButton type={images.update} id={item.id} onPressOut={updateMemo} />
+    <IconButton type={images.delete} id={item.id} onPressOut={deleteMemo} />
+  </Container>
+);
 
 MemoTask.propTypes = {
   item: PropTypes.object.isRequired,

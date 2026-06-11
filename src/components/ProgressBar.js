@@ -1,21 +1,19 @@
-import React from "react";
-import styled, { ThemeProvider } from "styled-components/native";
-import * as Progress from "react-native-progress";
-import { useTasksContext } from '../TaskContext';
-import {lightTheme, darkTheme} from '../theme'
- 
+import React from 'react';
+import styled, { useTheme } from 'styled-components/native';
+import * as Progress from 'react-native-progress';
+
 const BarView = styled.View`
   width: 100%;
   padding: 0 15px;
   flex-direction: row;
   margin-top: 20px;
 `;
- 
+
 const Bar = styled.View`
   margin: 10px 0;
   flex: 1;
 `;
- 
+
 const BarText = styled.Text`
   width: 40px;
   text-align: center;
@@ -23,33 +21,28 @@ const BarText = styled.Text`
   padding: 3px 0 0 5px;
   color: ${({ theme }) => theme.main};
 `;
- 
-const ProgressBar = props => {
-  const { darkMode} = useTasksContext();
 
-  const completedValue = props.completed || 0;
-  const lengthValue = props.length || 0;
-  const progressValue = (completedValue && lengthValue) ? completedValue / lengthValue : 0;
+const ProgressBar = ({ completed = 0, length = 0 }) => {
+  const theme = useTheme();
+  const progress = completed && length ? completed / length : 0;
 
   return (
-    <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
     <BarView>
       <Bar>
         <Progress.Bar
-          progress={progressValue}
+          progress={progress}
           width={null}
           height={8}
-          color={darkMode ? darkTheme.toggleDone:lightTheme.toggleDone}
-          borderColor={darkMode ? darkTheme.toggleborderColor:lightTheme.toggleborderColor}
-          unfilledColor={darkMode ? darkTheme.toggleunfilledColor:lightTheme.toggleunfilledColor}
+          color={theme.toggleDone}
+          borderColor={theme.toggleborderColor}
+          unfilledColor={theme.toggleunfilledColor}
         />
       </Bar>
       <BarText>
-        {completedValue}/{lengthValue}
+        {completed}/{length}
       </BarText>
     </BarView>
-    </ThemeProvider>
   );
 };
- 
+
 export default ProgressBar;

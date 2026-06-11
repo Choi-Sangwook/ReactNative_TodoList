@@ -1,46 +1,26 @@
-// ToggleSwitch.js
+import React from 'react';
+import { Switch } from 'react-native';
+import styled, { useTheme } from 'styled-components/native';
 
-import React, { useState, useEffect } from 'react';
-import { View, Switch, StyleSheet } from 'react-native';
-import { ThemeProvider } from 'styled-components/native';
-import { useTasksContext } from '../TaskContext';
-import {lightTheme, darkTheme} from '../theme'
+const Container = styled.View`
+  align-items: center;
+  justify-content: center;
+`;
 
 const ToggleButton = ({ onPress, completed }) => {
-  const [isEnabled, setIsEnabled] = useState(completed);
-  const { darkMode} = useTasksContext();
-
-  useEffect(() => {
-    setIsEnabled(completed);
-  }, [completed]);
-
-  const toggleSwitch = () => {
-    setIsEnabled((prev) => !prev);
-    onPress && onPress(!isEnabled);
-  };
+  const theme = useTheme();
 
   return (
-    <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
-    <View style={styles.container}>
+    <Container>
       <Switch
-        trackColor={{ false: darkMode ? darkTheme.toggleunfilledColor:lightTheme.toggleunfilledColor, true: darkMode ? darkTheme.toggleDone:lightTheme.toggleDone }}
-        thumbColor={isEnabled ? (darkMode ? darkTheme.tabBarColor:lightTheme.tabBarColor) : (darkMode ?darkTheme.tabBarColor:lightTheme.tabBarColor)}
+        trackColor={{ false: theme.toggleunfilledColor, true: theme.toggleDone }}
+        thumbColor={theme.toggleThumbColor}
         ios_backgroundColor="#3e3e3e"
-        onValueChange={toggleSwitch}
+        onValueChange={() => onPress && onPress()}
         value={completed}
       />
-    </View>
-    </ThemeProvider>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 0,
-    padding: 0,
-  },
-});
 
 export default ToggleButton;
