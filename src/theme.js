@@ -14,6 +14,10 @@ export const lightTheme = {
   done: '#616161',
   border: '#919498',
 
+  // home summary boxes
+  summaryTodoBackground: 'rgba(194, 220, 255, 0.45)',
+  summaryDoneBackground: 'rgba(216, 255, 235, 0.45)',
+
   // navigation
   tabBarColor: '#fff',
   tabBarActiveTintColor: '#2B3F62',
@@ -43,6 +47,10 @@ export const darkTheme = {
   text: '#fff',
   done: '#616161',
   border: '#5A5A5A',
+
+  // home summary boxes
+  summaryTodoBackground: '#979797',
+  summaryDoneBackground: '#979797',
 
   // navigation
   tabBarColor: '#5A5A5A',
