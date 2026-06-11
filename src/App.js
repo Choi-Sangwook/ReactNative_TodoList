@@ -3,7 +3,7 @@ import { SafeAreaView} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons as Icon } from '@expo/vector-icons';
 import HomeScreen from './screens/MainHome';
 import MemoScreen from './screens/Memo';
 import CalendarScreen from './screens/Canlendar';

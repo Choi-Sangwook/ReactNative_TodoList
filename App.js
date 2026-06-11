@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React from 'react';
 import { TasksProvider } from './src/TaskContext';
 import AppMain from './src/App'

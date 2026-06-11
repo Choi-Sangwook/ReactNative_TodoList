@@ -4,7 +4,6 @@ import styled, { ThemeProvider } from 'styled-components/native';
 import MemoTask from '../components/MemoTask';
 import IconButton from '../components/IconButton';
 import {images} from '../images';
-import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native';
 import { useTasksContext } from '../TaskContext';
@@ -81,6 +80,12 @@ export default function App({ navigation }) {
   };
 
   useEffect(() => {
+    const init = async () => {
+      await _loadMemos();
+      setIsReady(true);
+    };
+    init();
+
     const unsubscribe = navigation.addListener('focus', () => {
       _loadMemos();
     });
@@ -152,11 +157,5 @@ export default function App({ navigation }) {
         )}
       </Container>
     </ThemeProvider>
-  ) : (
-    <AppLoading
-      startAsync={_loadMemos}
-      onFinish={() => setIsReady(true)}
-      onError={console.error}
-    />
-  );
+  ) : null;
 }
