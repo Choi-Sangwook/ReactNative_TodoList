@@ -1,65 +1,47 @@
-import React, {useState}  from 'react';
-import { TouchableOpacity, Text } from 'react-native';
-import styled, { ThemeProvider } from 'styled-components/native';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { useTasksContext } from '../TaskContext';
-import {lightTheme, darkTheme} from '../theme'
-
-const Contents = styled.Text`
-    color: ${({ darkMode }) => darkMode ? darkTheme.buttonText:lightTheme.buttonText};
-    text-align: center;
-    font-size:15px;
-    font-weight: 700;
-`;
+import React, { useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import styled from 'styled-components/native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { formatDate } from '../utils/date';
 
 const Container = styled.View`
-    width: 90px;
-    background: ${({ darkMode }) => darkMode ? darkTheme.itemCompletedBackground: '#3E92FF'};
-    height: 45px;
-    border: 1px solid ${({ darkMode }) => darkMode ? darkTheme.itemCompletedBackground: '#3E92FF'};
-    border-radius: 15px;
-    padding: 10px 15px;
-    margin:0;
+  width: 90px;
+  background: ${({ theme }) => theme.accent};
+  height: 45px;
+  border: 1px solid ${({ theme }) => theme.accent};
+  border-radius: 15px;
+  padding: 10px 15px;
 `;
 
-const CustonButton = ({title, onDateChange}) => {
-const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-const { darkMode} = useTasksContext();
+const Label = styled.Text`
+  color: ${({ theme }) => theme.buttonText};
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+`;
 
-const showDatePicker = () => {
-    setDatePickerVisibility(true);
-};
+const DatePicker = ({ title, date, onDateChange }) => {
+  const [isVisible, setIsVisible] = useState(false);
 
-const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-};
-
-const handleConfirm = (date) => {
-    console.warn("A date has been picked: ", date);
-    const formattedDate = date.toISOString().split('T')[0];
-    onDateChange(formattedDate);
-    hideDatePicker();
-};
+  const handleConfirm = (picked) => {
+    onDateChange(formatDate(picked));
+    setIsVisible(false);
+  };
 
   return (
-    <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>
-    <TouchableOpacity onPressOut={showDatePicker}>
-        <Container darkMode={darkMode}>
-            <Contents darkMode={darkMode}>{title}</Contents>
-            <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode="date"
-                onConfirm={handleConfirm}
-                onCancel={hideDatePicker}
-            />
-        </Container>
+    <TouchableOpacity onPressOut={() => setIsVisible(true)}>
+      <Container>
+        <Label>{title}</Label>
+      </Container>
+      <DateTimePickerModal
+        isVisible={isVisible}
+        mode="date"
+        date={date ? new Date(date) : new Date()}
+        onConfirm={handleConfirm}
+        onCancel={() => setIsVisible(false)}
+      />
     </TouchableOpacity>
-    </ThemeProvider>
   );
 };
 
-CustonButton.defaultProps = {
-  onPressOut: () => {},
-};
-
-export default CustonButton;
+export default DatePicker;
