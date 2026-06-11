@@ -69,6 +69,3 @@ export const darkTheme = {
   primary: '#474747',
   accent: '#474747',
 };
-
-// TEMP compat: MemoForm still imports `theme`; removed when Memo is migrated (Phase 5).
-export const theme = lightTheme;
