@@ -119,8 +119,7 @@ export default function App({ navigation }) {
 
   const handleDateSelect = async(date) => {
     const dateString = date.dateString;
-    setSelectedDate(dateString); 
-    console.log(dateString);
+    setSelectedDate(dateString);
     const updatedMarkedDates = { ...markedDates };
     if (updatedMarkedDates[selectedDate]) {
       updatedMarkedDates[selectedDate] = {
@@ -134,7 +133,6 @@ export default function App({ navigation }) {
     marked: updatedMarkedDates[dateString]?.marked || false,
     dots: updatedMarkedDates[dateString]?.dots || [],
     };
-    console.log(updatedMarkedDates[dateString]);
     setMarkedDates(updatedMarkedDates);
     _selectedDateTasks();    
   };

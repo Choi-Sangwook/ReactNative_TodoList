@@ -27,7 +27,6 @@ const Contents = styled.Text`
 
 const Box = ({date, width, onDateChange}) =>{
     const { darkMode} = useTasksContext();
-    console.log('선택된 날짜' , date);
 
     return (
         <ThemeProvider theme={darkMode ? darkTheme:lightTheme}>

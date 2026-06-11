@@ -33,8 +33,6 @@ export const TasksProvider = ({ children }) => {
     };
     useEffect(() => {
         _loadTasks();
-        console.log("배열");
-        console.log(tasks);
     }, []);
   
     return (
