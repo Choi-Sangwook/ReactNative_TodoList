@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useWindowDimensions } from 'react-native';
 import styled, { useTheme } from 'styled-components/native';
 import { Calendar } from 'react-native-calendars';
@@ -31,60 +31,39 @@ const List = styled.ScrollView`
 export default function CalendarScreen({ navigation }) {
   const { width } = useWindowDimensions();
   const theme = useTheme();
-  const formattedToday = todayString();
   const { tasks, updateTasks } = useTasksContext();
-  const [loadTasks, setLoadTasks] = useState({});
-  const [selectedDate, setSelectedDate] = useState(formattedToday);
-  const [markedDates, setMarkedDates] = useState({});
+  const [selectedDate, setSelectedDate] = useState(todayString());
 
-  const _selectedDateTasks = () => {
-    const selectedDateTasks = Object.keys(tasks)
-      .filter((key) => tasks[key].date === selectedDate)
-      .reduce((obj, key) => {
-        obj[key] = tasks[key];
-        return obj;
-      }, {});
-    setLoadTasks(selectedDateTasks);
-  };
+  // Re-mark the calendar on today every time the screen is opened.
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () =>
+      setSelectedDate(todayString())
+    );
+    return unsubscribe;
+  }, [navigation]);
 
-  const _loadTasks = () => {
-    const marked = {
-      [selectedDate]: { selected: true, marked: false, dots: [{ color: 'green' }] },
-    };
-    Object.keys(tasks).forEach((taskId) => {
-      const task = tasks[taskId];
-      marked[task.date] = {
-        selected: marked[task.date]?.selected || false,
-        dots: [{ color: 'green' }],
-        marked: true,
-      };
+  // Tasks shown in the list below the calendar (the selected day's tasks).
+  const dayTasks = useMemo(
+    () => Object.values(tasks).filter((task) => task.date === selectedDate),
+    [tasks, selectedDate]
+  );
+
+  // A dot on every date that has tasks, plus the "selected" marker which
+  // follows selectedDate (so it moves when the user taps another day).
+  const markedDates = useMemo(() => {
+    const marked = {};
+    Object.values(tasks).forEach((task) => {
+      marked[task.date] = { marked: true, dots: [{ color: 'green' }] };
     });
-    setMarkedDates(marked);
-    _selectedDateTasks();
-  };
+    marked[selectedDate] = { ...(marked[selectedDate] || {}), selected: true };
+    return marked;
+  }, [tasks, selectedDate]);
 
   const _deleteTask = (id) => {
     const currentTasks = { ...tasks };
     delete currentTasks[id];
     updateTasks(currentTasks);
   };
-
-  const handleDateSelect = (day) => {
-    setSelectedDate(day.dateString);
-  };
-
-  useEffect(() => {
-    _loadTasks();
-  }, [tasks]);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => _loadTasks());
-    return unsubscribe;
-  }, [navigation, tasks]);
-
-  useEffect(() => {
-    _selectedDateTasks();
-  }, [selectedDate]);
 
   const calendarTheme = {
     calendarBackground: theme.background,
@@ -110,9 +89,10 @@ export default function CalendarScreen({ navigation }) {
 
       <CalendarContainer width={width}>
         <Calendar
+          key={theme.background}
           theme={calendarTheme}
           showSixWeeks={false}
-          onDayPress={handleDateSelect}
+          onDayPress={(day) => setSelectedDate(day.dateString)}
           markedDates={markedDates}
           monthFormat={'M월'}
         />
@@ -120,16 +100,14 @@ export default function CalendarScreen({ navigation }) {
 
       <SubTitle>그 날의 할 일</SubTitle>
       <List width={width}>
-        {Object.values(loadTasks)
-          .reverse()
-          .map((item) => (
-            <CalendarTask
-              key={item.id}
-              item={item}
-              deleteTask={_deleteTask}
-              onPressOut={() => navigation.navigate('AddTaskForm', { item })}
-            />
-          ))}
+        {[...dayTasks].reverse().map((item) => (
+          <CalendarTask
+            key={item.id}
+            item={item}
+            deleteTask={_deleteTask}
+            onPressOut={() => navigation.navigate('AddTaskForm', { item })}
+          />
+        ))}
       </List>
     </Screen>
   );
