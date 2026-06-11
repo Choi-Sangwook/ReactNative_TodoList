@@ -1,5 +1,4 @@
 import React from 'react';
-import { SafeAreaView} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -20,7 +19,6 @@ const MemoStack = createStackNavigator();
 const CalendarStack = createStackNavigator();
 
 const MemoStackScreen = () => (
-  <SafeAreaView style={{flex:2}}>
   <MemoStack.Navigator
     screenOptions={{
       headerShown: false,
@@ -28,7 +26,6 @@ const MemoStackScreen = () => (
     <MemoStack.Screen name="Memo" component={MemoScreen} />
     <MemoStack.Screen name="AddMemoForm" component={MemoFormScreen} />
   </MemoStack.Navigator>
-  </SafeAreaView>
 );
 
 const CalendarStackScreen = () => (
